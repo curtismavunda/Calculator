@@ -1,0 +1,85 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    margin: 0;
+}
+
+table {
+    border-collapse: collapse;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+td {
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 1.5em;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+td:hover {
+    background-color: #e0e0e0;
+}
+
+td[colspan="2"] {
+    width: 120px; /* For the '0' button */
+}
+
+td[colspan="4"] {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+}
+
+#InputBox {
+    width: calc(100% - 20px);
+    height: 50px;
+    border: none;
+    background-color: #333;
+    color: #fff;
+    font-size: 2em;
+    text-align: right;
+    padding: 0 10px;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+/* Style for operator buttons */
+td[onclick*="operatorBtnPressed"] {
+    background-color: #f9a825; /* Orange color */
+    color: #fff;
+}
+
+td[onclick*="operatorBtnPressed"]:hover {
+    background-color: #fbc02d;
+}
+
+/* Style for equals button */
+td[onclick*="equalsBtnPressed"] {
+    background-color: #4CAF50; /* Green color */
+    color: #fff;
+}
+
+td[onclick*="equalsBtnPressed"]:hover {
+    background-color: #66BB6A;
+}
+
+/* Style for AC button */
+td[onclick*="btnACpressed"] {
+    background-color: #f44336; /* Red color */
+    color: #fff;
+}
+
+td[onclick*="btnACpressed"]:hover {
+    background-color: #ef5350;
+}
