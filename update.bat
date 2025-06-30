@@ -1,3 +1,3 @@
 git add .
 git commit -m "Update files"
-git push
+git push --set-upstream origin master
