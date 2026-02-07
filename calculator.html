@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" aria-label="Calculator display" readonly/>
                 </td>
             </tr>
             <tr>
@@ -92,6 +92,41 @@
                 value1 = 0;
                 newLine = true;
             }
+
+            // Handle physical keyboard input
+            document.addEventListener('keydown', function(event) {
+                const key = event.key;
+                if (key >= '0' && key <= '9') {
+                    digitBtnPressed(parseInt(key));
+                } else if (key === '+') {
+                    operatorBtnPressed('+');
+                } else if (key === '-') {
+                    operatorBtnPressed('-');
+                } else if (key === '*' || key.toLowerCase() === 'x') {
+                    operatorBtnPressed('x');
+                } else if (key === '/') {
+                    operatorBtnPressed('/');
+                } else if (key === 'Enter' || key === '=') {
+                    equalsBtnPressed();
+                    event.preventDefault();
+                } else if (key === 'Escape') {
+                    btnACpressed();
+                }
+            });
+
+            // Make table cells keyboard-accessible
+            document.querySelectorAll('td[onclick]').forEach(function(td) {
+                td.setAttribute('tabindex', '0');
+                td.setAttribute('role', 'button');
+
+                td.addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        event.stopPropagation(); // Prevent global keydown listener from also firing
+                        td.click();
+                    }
+                });
+            });
         </script>
     
     </body>
