@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
@@ -92,6 +92,66 @@
                 value1 = 0;
                 newLine = true;
             }
+        </script>
+
+        <script>
+            // Accessibility enhancements
+            (function() {
+                const labels = {
+                    'x': 'multiply',
+                    '/': 'divide',
+                    '+': 'add',
+                    '-': 'subtract',
+                    '=': 'equals',
+                    'AC': 'all clear'
+                };
+
+                document.querySelectorAll('td[onclick]').forEach(btn => {
+                    btn.setAttribute('role', 'button');
+                    btn.setAttribute('tabindex', '0');
+                    const text = btn.innerText.trim();
+                    if (labels[text]) {
+                        btn.setAttribute('aria-label', labels[text]);
+                    } else if (text !== "" && !isNaN(text)) {
+                        btn.setAttribute('aria-label', 'digit ' + text);
+                    }
+
+                    btn.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            btn.click();
+                        }
+                    });
+                });
+
+                document.addEventListener('keydown', function(e) {
+                    const key = e.key;
+                    if (key >= '0' && key <= '9') {
+                        digitBtnPressed(parseInt(key));
+                    } else if (key === '+') {
+                        operatorBtnPressed('+');
+                    } else if (key === '-') {
+                        operatorBtnPressed('-');
+                    } else if (key === '*' || key.toLowerCase() === 'x') {
+                        operatorBtnPressed('x');
+                    } else if (key === '/') {
+                        operatorBtnPressed('/');
+                    } else if (key === 'Enter' || key === '=') {
+                        equalsBtnPressed();
+                    } else if (key === 'Escape') {
+                        btnACpressed();
+                    } else if (key === 'Backspace') {
+                        const input = document.getElementById("InputBox");
+                        if (input.value.length > 1 && !newLine) {
+                            input.value = input.value.slice(0, -1);
+                        } else {
+                            input.value = "0";
+                            newLine = true;
+                        }
+                    }
+                });
+            })();
         </script>
     
     </body>
