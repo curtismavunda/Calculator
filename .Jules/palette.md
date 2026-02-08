@@ -1,0 +1,3 @@
+## 2025-05-08 - [Keyboard Accessibility for Table-Based Interactive Elements]
+**Learning:** In projects using non-semantic elements (like <td>) as buttons, adding 'role="button"' and 'tabindex="0"' is essential for screen reader support and focusability. When implementing global keyboard shortcuts alongside these focusable elements, 'event.stopPropagation()' must be used in the element-specific listeners (for Enter/Space) to prevent the global listener from double-triggering the action.
+**Action:** Always ensure that interactive elements have appropriate ARIA roles and that event propagation is handled correctly to avoid duplicate interactions when using global hotkeys.
