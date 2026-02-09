@@ -1,0 +1,3 @@
+## 2025-05-14 - [Accessibility for non-semantic interactive elements]
+**Learning:** When using non-semantic elements like `<td>` as buttons, it's not enough to add `onclick`. You must add `role="button"`, `tabindex="0"`, and handle keyboard events (Enter/Space). Also, be aware of focus hijacking where a previously clicked button remains focused and intercepts 'Enter' keys that were intended for a global listener.
+**Action:** Always add a complete accessibility suite (role, tabindex, keyboard listeners) to non-semantic interactive elements and consider focus management if global keyboard shortcuts are also present.

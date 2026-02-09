@@ -31,6 +31,12 @@ td:hover {
     background-color: #e0e0e0;
 }
 
+td:focus-visible {
+    outline: 3px solid #4CAF50;
+    outline-offset: -3px;
+    background-color: #e0e0e0;
+}
+
 td[colspan="2"] {
     width: 120px; /* For the '0' button */
 }
@@ -39,6 +45,10 @@ td[colspan="4"] {
     background-color: #333;
     color: #fff;
     padding: 10px;
+}
+
+#InputBox:focus {
+    outline: none;
 }
 
 #InputBox {

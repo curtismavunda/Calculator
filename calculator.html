@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-label="Calculator display" aria-live="polite"/>
                 </td>
             </tr>
             <tr>
@@ -92,7 +92,37 @@
                 value1 = 0;
                 newLine = true;
             }
+
+            // Accessibility and Keyboard support
+            document.querySelectorAll('td[onclick]').forEach(btn => {
+                btn.setAttribute('role', 'button');
+                btn.setAttribute('tabindex', '0');
+                btn.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        btn.click();
+                    }
+                });
+            });
+
+            window.addEventListener('keydown', e => {
+                if (e.key >= '0' && e.key <= '9') digitBtnPressed(parseInt(e.key));
+                if (e.key === '+') operatorBtnPressed('+');
+                if (e.key === '-') operatorBtnPressed('-');
+                if (e.key === '*') operatorBtnPressed('x');
+                if (e.key === '/') {
+                    e.preventDefault(); // Prevent browser search
+                    operatorBtnPressed('/');
+                }
+                if (e.key === 'Enter' || e.key === '=') equalsBtnPressed();
+                if (e.key === 'Escape' || e.key.toLowerCase() === 'c') btnACpressed();
+                if (e.key === 'Backspace') {
+                    const input = document.getElementById("InputBox");
+                    input.value = input.value.slice(0, -1) || "0";
+                    if (input.value === "0") newLine = true;
+                }
+            });
         </script>
-    
     </body>
 </html>
