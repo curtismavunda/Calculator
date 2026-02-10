@@ -83,3 +83,10 @@ td[onclick*="btnACpressed"] {
 td[onclick*="btnACpressed"]:hover {
     background-color: #ef5350;
 }
+
+/* Focus styles for keyboard navigation */
+td:focus-visible {
+    outline: 3px solid #4CAF50;
+    outline-offset: -3px;
+    border-radius: 4px;
+}
