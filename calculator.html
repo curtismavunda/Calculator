@@ -92,7 +92,44 @@
                 value1 = 0;
                 newLine = true;
             }
+
+            // Accessibility and Keyboard Support
+            (function() {
+                const display = document.getElementById("InputBox");
+                display.setAttribute("readonly", "true");
+                display.setAttribute("aria-label", "Calculator Display");
+                display.setAttribute("aria-live", "polite");
+
+                const ariaLabels = {
+                    'x': 'multiply', '-': 'subtract', '+': 'add',
+                    '/': 'divide', 'AC': 'all clear', '=': 'equals'
+                };
+
+                document.querySelectorAll('td[onclick]').forEach(btn => {
+                    btn.setAttribute('role', 'button');
+                    btn.setAttribute('tabindex', '0');
+                    const text = btn.innerText.trim();
+                    if (ariaLabels[text]) btn.setAttribute('aria-label', ariaLabels[text]);
+
+                    btn.addEventListener('keydown', e => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            btn.click();
+                        }
+                    });
+                });
+
+                document.addEventListener('keydown', e => {
+                    if (/[0-9]/.test(e.key)) digitBtnPressed(parseInt(e.key));
+                    else if (e.key === '+') operatorBtnPressed('+');
+                    else if (e.key === '-') operatorBtnPressed('-');
+                    else if (e.key === '*') operatorBtnPressed('x');
+                    else if (e.key === '/') operatorBtnPressed('/');
+                    else if (e.key === 'Enter' || e.key === '=') equalsBtnPressed();
+                    else if (e.key === 'Escape') btnACpressed();
+                });
+            })();
         </script>
-    
     </body>
 </html>
