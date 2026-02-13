@@ -27,8 +27,14 @@ td {
     transition: background-color 0.2s ease;
 }
 
-td:hover {
+td:focus {
+    outline: none;
+}
+
+td:hover, td:focus-visible {
     background-color: #e0e0e0;
+    outline: 3px solid #2196F3;
+    outline-offset: -3px;
 }
 
 td[colspan="2"] {
@@ -60,7 +66,7 @@ td[onclick*="operatorBtnPressed"] {
     color: #fff;
 }
 
-td[onclick*="operatorBtnPressed"]:hover {
+td[onclick*="operatorBtnPressed"]:hover, td[onclick*="operatorBtnPressed"]:focus-visible {
     background-color: #fbc02d;
 }
 
@@ -70,7 +76,7 @@ td[onclick*="equalsBtnPressed"] {
     color: #fff;
 }
 
-td[onclick*="equalsBtnPressed"]:hover {
+td[onclick*="equalsBtnPressed"]:hover, td[onclick*="equalsBtnPressed"]:focus-visible {
     background-color: #66BB6A;
 }
 
@@ -80,6 +86,6 @@ td[onclick*="btnACpressed"] {
     color: #fff;
 }
 
-td[onclick*="btnACpressed"]:hover {
+td[onclick*="btnACpressed"]:hover, td[onclick*="btnACpressed"]:focus-visible {
     background-color: #ef5350;
 }
