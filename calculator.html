@@ -7,35 +7,34 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator Display"/>
                 </td>
             </tr>
             <tr>
-                <td onclick="digitBtnPressed(7)">7</td>
-                <td onclick="digitBtnPressed(8)">8</td>
-                <td onclick="digitBtnPressed(9)">9</td>
-                <td onclick ="operatorBtnPressed('x')">x</td>
+                <td onclick="digitBtnPressed(7)" role="button" tabindex="0">7</td>
+                <td onclick="digitBtnPressed(8)" role="button" tabindex="0">8</td>
+                <td onclick="digitBtnPressed(9)" role="button" tabindex="0">9</td>
+                <td onclick="operatorBtnPressed('x')" role="button" tabindex="0" aria-label="multiply">x</td>
             </tr>
             <tr>
-                <td onclick="digitBtnPressed(4)">4</td>
-                <td onclick="digitBtnPressed(5)">5</td>
-                <td onclick="digitBtnPressed(6)">6</td>
-                <td onclick ="operatorBtnPressed('-')">-</td>
+                <td onclick="digitBtnPressed(4)" role="button" tabindex="0">4</td>
+                <td onclick="digitBtnPressed(5)" role="button" tabindex="0">5</td>
+                <td onclick="digitBtnPressed(6)" role="button" tabindex="0">6</td>
+                <td onclick="operatorBtnPressed('-')" role="button" tabindex="0" aria-label="subtract">-</td>
             </tr>
             <tr>
-                <td onclick="digitBtnPressed(1)">1</td>
-                <td onclick="digitBtnPressed(2)">2</td>
-                <td onclick="digitBtnPressed(3)">3</td>
-                <td onclick ="operatorBtnPressed('+')">+</td>
+                <td onclick="digitBtnPressed(1)" role="button" tabindex="0">1</td>
+                <td onclick="digitBtnPressed(2)" role="button" tabindex="0">2</td>
+                <td onclick="digitBtnPressed(3)" role="button" tabindex="0">3</td>
+                <td onclick="operatorBtnPressed('+')" role="button" tabindex="0" aria-label="add">+</td>
             </tr>
             <tr>
-                <td onclick ="digitBtnPressed(0)" colspan="2">0</td>
-                
-                <td onclick="btnACpressed()">AC</td>
-                <td onclick ="operatorBtnPressed('/')">/</td>
+                <td onclick="digitBtnPressed(0)" colspan="2" role="button" tabindex="0">0</td>
+                <td onclick="btnACpressed()" role="button" tabindex="0" aria-label="all clear">AC</td>
+                <td onclick="operatorBtnPressed('/')" role="button" tabindex="0" aria-label="divide">/</td>
             </tr>
             <tr>
-                <td onclick="equalsBtnPressed()" colspan="4">=</td>
+                <td onclick="equalsBtnPressed()" colspan="4" role="button" tabindex="0" aria-label="equals">=</td>
             </tr>
         </table>
         
@@ -43,6 +42,31 @@
             var newLine = true; //Boolean variable. Determines if the next thing user types should be on a new line
             var value1;
             var currentOperator;
+
+            // Add event listeners for keyboard accessibility on buttons
+            document.querySelectorAll('td[role="button"]').forEach(btn => {
+                btn.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.click();
+                    }
+                });
+            });
+
+            // Global keyboard support
+            window.addEventListener('keydown', function(e) {
+                if (e.key >= '0' && e.key <= '9') {
+                    digitBtnPressed(parseInt(e.key));
+                } else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
+                    var op = e.key === '*' ? 'x' : e.key;
+                    operatorBtnPressed(op);
+                } else if (e.key === 'Enter') {
+                    equalsBtnPressed();
+                } else if (e.key === 'Escape') {
+                    btnACpressed();
+                }
+            });
             
             //Event handler for when any digit button is pressed
             function digitBtnPressed(button){
