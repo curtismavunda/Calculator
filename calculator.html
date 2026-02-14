@@ -7,35 +7,35 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Display"/>
                 </td>
             </tr>
             <tr>
-                <td onclick="digitBtnPressed(7)">7</td>
-                <td onclick="digitBtnPressed(8)">8</td>
-                <td onclick="digitBtnPressed(9)">9</td>
-                <td onclick ="operatorBtnPressed('x')">x</td>
+                <td onclick="digitBtnPressed(7)" role="button" tabindex="0" aria-label="7">7</td>
+                <td onclick="digitBtnPressed(8)" role="button" tabindex="0" aria-label="8">8</td>
+                <td onclick="digitBtnPressed(9)" role="button" tabindex="0" aria-label="9">9</td>
+                <td onclick ="operatorBtnPressed('x')" role="button" tabindex="0" aria-label="multiply">x</td>
             </tr>
             <tr>
-                <td onclick="digitBtnPressed(4)">4</td>
-                <td onclick="digitBtnPressed(5)">5</td>
-                <td onclick="digitBtnPressed(6)">6</td>
-                <td onclick ="operatorBtnPressed('-')">-</td>
+                <td onclick="digitBtnPressed(4)" role="button" tabindex="0" aria-label="4">4</td>
+                <td onclick="digitBtnPressed(5)" role="button" tabindex="0" aria-label="5">5</td>
+                <td onclick="digitBtnPressed(6)" role="button" tabindex="0" aria-label="6">6</td>
+                <td onclick ="operatorBtnPressed('-')" role="button" tabindex="0" aria-label="subtract">-</td>
             </tr>
             <tr>
-                <td onclick="digitBtnPressed(1)">1</td>
-                <td onclick="digitBtnPressed(2)">2</td>
-                <td onclick="digitBtnPressed(3)">3</td>
-                <td onclick ="operatorBtnPressed('+')">+</td>
+                <td onclick="digitBtnPressed(1)" role="button" tabindex="0" aria-label="1">1</td>
+                <td onclick="digitBtnPressed(2)" role="button" tabindex="0" aria-label="2">2</td>
+                <td onclick="digitBtnPressed(3)" role="button" tabindex="0" aria-label="3">3</td>
+                <td onclick ="operatorBtnPressed('+')" role="button" tabindex="0" aria-label="add">+</td>
             </tr>
             <tr>
-                <td onclick ="digitBtnPressed(0)" colspan="2">0</td>
+                <td onclick ="digitBtnPressed(0)" colspan="2" role="button" tabindex="0" aria-label="0">0</td>
                 
-                <td onclick="btnACpressed()">AC</td>
-                <td onclick ="operatorBtnPressed('/')">/</td>
+                <td onclick="btnACpressed()" role="button" tabindex="0" aria-label="all clear">AC</td>
+                <td onclick ="operatorBtnPressed('/')" role="button" tabindex="0" aria-label="divide">/</td>
             </tr>
             <tr>
-                <td onclick="equalsBtnPressed()" colspan="4">=</td>
+                <td onclick="equalsBtnPressed()" colspan="4" role="button" tabindex="0" aria-label="equals">=</td>
             </tr>
         </table>
         
@@ -92,6 +92,37 @@
                 value1 = 0;
                 newLine = true;
             }
+
+            // Global keyboard support for physical keys
+            document.addEventListener('keydown', function(event) {
+                const key = event.key;
+                if (key >= '0' && key <= '9') {
+                    digitBtnPressed(parseInt(key));
+                } else if (key === '+') {
+                    operatorBtnPressed('+');
+                } else if (key === '-') {
+                    operatorBtnPressed('-');
+                } else if (key === '*') {
+                    operatorBtnPressed('x');
+                } else if (key === '/') {
+                    operatorBtnPressed('/');
+                } else if (key === 'Enter') {
+                    equalsBtnPressed();
+                } else if (key === 'Escape') {
+                    btnACpressed();
+                }
+            });
+
+            // Handle Enter/Space on focused buttons with stopPropagation to prevent double-triggering
+            document.querySelectorAll('td[role="button"]').forEach(function(btn) {
+                btn.addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        btn.click();
+                    }
+                });
+            });
         </script>
     
     </body>
