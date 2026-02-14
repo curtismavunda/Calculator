@@ -27,6 +27,17 @@ td {
     transition: background-color 0.2s ease;
 }
 
+td:focus {
+    outline: none;
+}
+
+td:focus-visible {
+    outline: 3px solid #42a5f5;
+    outline-offset: -4px;
+    z-index: 1;
+    position: relative;
+}
+
 td:hover {
     background-color: #e0e0e0;
 }
