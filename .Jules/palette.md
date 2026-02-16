@@ -1,0 +1,3 @@
+## 2026-02-16 - Calculator Accessibility and Keyboard Handling
+**Learning:** When adding keyboard support to custom interactive elements (like `<td>` acting as buttons), it's crucial to use both global and local event listeners. Local listeners (on the element) should handle 'Enter' and 'Space' and use `event.stopPropagation()` to prevent the same key from triggering a different global shortcut (e.g., global 'Enter' for equals). Also, always ensure `td:focus { outline: none; }` is placed BEFORE `:focus-visible` to avoid suppressing the focus indicator for keyboard users.
+**Action:** Always implement `stopPropagation()` in local keyboard listeners when global shortcuts are present, and maintain the correct order for focus-reset vs focus-visible styles.
