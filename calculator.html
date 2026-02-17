@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
@@ -92,6 +92,35 @@
                 value1 = 0;
                 newLine = true;
             }
+
+            // Accessibility: Add roles, tabindex, and aria-labels to buttons
+            const labels = { 'x': 'multiply', '-': 'subtract', '+': 'add', '/': 'divide', 'AC': 'all clear', '=': 'equals' };
+            document.querySelectorAll('td[onclick]').forEach(btn => {
+                btn.setAttribute('role', 'button');
+                btn.setAttribute('tabindex', '0');
+                btn.setAttribute('aria-label', labels[btn.innerText] || btn.innerText);
+
+                // Keyboard support for focused buttons
+                btn.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        btn.click();
+                    }
+                });
+            });
+
+            // Global keyboard shortcuts
+            document.addEventListener('keydown', e => {
+                const key = e.key;
+                if (/[0-9]/.test(key)) digitBtnPressed(parseInt(key));
+                else if (key === '+') operatorBtnPressed('+');
+                else if (key === '-') operatorBtnPressed('-');
+                else if (key === '*') operatorBtnPressed('x');
+                else if (key === '/') operatorBtnPressed('/');
+                else if (key === 'Enter') equalsBtnPressed();
+                else if (key === 'Escape') btnACpressed();
+            });
         </script>
     
     </body>
