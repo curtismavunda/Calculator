@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
@@ -40,6 +40,45 @@
         </table>
         
         <script>
+            // Accessibility and Keyboard Support
+            (function() {
+                const labels = {
+                    'x': 'multiply',
+                    '-': 'subtract',
+                    '+': 'add',
+                    '/': 'divide',
+                    'AC': 'all clear',
+                    '=': 'equals'
+                };
+
+                document.querySelectorAll('td[onclick]').forEach(td => {
+                    td.setAttribute('role', 'button');
+                    td.setAttribute('tabindex', '0');
+                    const content = td.innerText.trim();
+                    td.setAttribute('aria-label', labels[content] || content);
+
+                    td.addEventListener('keydown', e => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            td.click();
+                        }
+                    });
+                });
+
+                window.addEventListener('keydown', e => {
+                    if (e.key >= '0' && e.key <= '9') {
+                        digitBtnPressed(parseInt(e.key));
+                    } else if (e.key === '+' || e.key === '-' || e.key === '/' || e.key === '*') {
+                        operatorBtnPressed(e.key === '*' ? 'x' : e.key);
+                    } else if (e.key === 'Enter') {
+                        equalsBtnPressed();
+                    } else if (e.key === 'Escape') {
+                        btnACpressed();
+                    }
+                });
+            })();
+
             var newLine = true; //Boolean variable. Determines if the next thing user types should be on a new line
             var value1;
             var currentOperator;
