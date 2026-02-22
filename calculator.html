@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculation display"/>
                 </td>
             </tr>
             <tr>
@@ -92,6 +92,36 @@
                 value1 = 0;
                 newLine = true;
             }
+
+            // Accessibility: Add roles and ARIA labels dynamically
+            document.querySelectorAll('td[onclick]').forEach(button => {
+                button.setAttribute('role', 'button');
+                button.setAttribute('tabindex', '0');
+                const labelMap = { 'x': 'multiply', '-': 'subtract', '+': 'add', '/': 'divide', 'AC': 'all clear', '=': 'equals' };
+                const text = button.innerText.trim();
+                button.setAttribute('aria-label', labelMap[text] || text);
+
+                // Handle Enter/Space on focused buttons
+                button.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        button.click();
+                    }
+                });
+            });
+
+            // Global keyboard support
+            document.addEventListener('keydown', (event) => {
+                const key = event.key;
+                if (key >= '0' && key <= '9') digitBtnPressed(parseInt(key));
+                else if (key === '+') operatorBtnPressed('+');
+                else if (key === '-') operatorBtnPressed('-');
+                else if (key === '*') operatorBtnPressed('x');
+                else if (key === '/') operatorBtnPressed('/');
+                else if (key === 'Enter') equalsBtnPressed();
+                else if (key === 'Escape') btnACpressed();
+            });
         </script>
     
     </body>
