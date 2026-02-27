@@ -40,6 +40,56 @@
         </table>
         
         <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var inputBox = document.getElementById('InputBox');
+                inputBox.setAttribute('readonly', 'true');
+                inputBox.setAttribute('aria-live', 'polite');
+                inputBox.setAttribute('aria-label', 'Display');
+
+                var buttons = document.querySelectorAll('td[onclick]');
+                var labelMap = {
+                    'x': 'multiply',
+                    '-': 'subtract',
+                    '+': 'add',
+                    '/': 'divide',
+                    'AC': 'all clear',
+                    '=': 'equals'
+                };
+
+                buttons.forEach(function(btn) {
+                    btn.setAttribute('role', 'button');
+                    btn.setAttribute('tabindex', '0');
+                    var text = btn.innerText.trim();
+                    btn.setAttribute('aria-label', labelMap[text] || text);
+
+                    btn.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            btn.click();
+                        }
+                    });
+                });
+
+                document.addEventListener('keydown', function(e) {
+                    if (e.key >= '0' && e.key <= '9') {
+                        digitBtnPressed(parseInt(e.key));
+                    } else if (e.key === '+') {
+                        operatorBtnPressed('+');
+                    } else if (e.key === '-') {
+                        operatorBtnPressed('-');
+                    } else if (e.key === '*' || e.key === 'x') {
+                        operatorBtnPressed('x');
+                    } else if (e.key === '/') {
+                        operatorBtnPressed('/');
+                    } else if (e.key === 'Enter') {
+                        equalsBtnPressed();
+                    } else if (e.key === 'Escape') {
+                        btnACpressed();
+                    }
+                });
+            });
+
             var newLine = true; //Boolean variable. Determines if the next thing user types should be on a new line
             var value1;
             var currentOperator;
