@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
@@ -92,6 +92,40 @@
                 value1 = 0;
                 newLine = true;
             }
+
+            // Initialize accessibility and keyboard listeners
+            document.querySelectorAll('td[onclick]').forEach(button => {
+                button.setAttribute('role', 'button');
+                button.setAttribute('tabindex', '0');
+
+                let label = button.innerText;
+                if (label === 'x') label = 'multiply';
+                else if (label === '-') label = 'subtract';
+                else if (label === '+') label = 'add';
+                else if (label === '/') label = 'divide';
+                else if (label === 'AC') label = 'all clear';
+                else if (label === '=') label = 'equals';
+                button.setAttribute('aria-label', label);
+
+                button.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        button.click();
+                    }
+                });
+            });
+
+            window.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'TD') return; // Handled by button listener
+                if (e.key >= '0' && e.key <= '9') digitBtnPressed(parseInt(e.key));
+                else if (e.key === '+') operatorBtnPressed('+');
+                else if (e.key === '-') operatorBtnPressed('-');
+                else if (e.key === '*') operatorBtnPressed('x');
+                else if (e.key === '/') operatorBtnPressed('/');
+                else if (e.key === 'Enter' || e.key === '=') equalsBtnPressed();
+                else if (e.key === 'Escape') btnACpressed();
+            });
         </script>
     
     </body>
