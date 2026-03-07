@@ -54,6 +54,17 @@ td[colspan="4"] {
     border-radius: 5px;
 }
 
+td:focus {
+    outline: none;
+}
+
+td:focus-visible {
+    outline: 3px solid #f9a825;
+    outline-offset: -3px;
+    position: relative;
+    z-index: 1;
+}
+
 /* Style for operator buttons */
 td[onclick*="operatorBtnPressed"] {
     background-color: #f9a825; /* Orange color */
