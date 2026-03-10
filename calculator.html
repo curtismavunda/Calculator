@@ -43,6 +43,26 @@
             var newLine = true; //Boolean variable. Determines if the next thing user types should be on a new line
             var value1;
             var currentOperator;
+
+            (function setupAccessibility() {
+                const labels = {'x':'multiply', '-': 'subtract', '+': 'add', '/': 'divide', 'AC': 'all clear', '=': 'equals'};
+                const input = document.getElementById('InputBox');
+                input.setAttribute('aria-label', 'Calculator display');
+                input.setAttribute('aria-live', 'polite');
+                input.setAttribute('readonly', 'true');
+
+                document.querySelectorAll('td[onclick]').forEach(btn => {
+                    btn.setAttribute('role', 'button');
+                    btn.setAttribute('tabindex', '0');
+                    btn.setAttribute('aria-label', labels[btn.innerText.trim()] || btn.innerText.trim());
+                    btn.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            btn.click();
+                        }
+                    });
+                });
+            })();
             
             //Event handler for when any digit button is pressed
             function digitBtnPressed(button){
