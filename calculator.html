@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
@@ -92,6 +92,30 @@
                 value1 = 0;
                 newLine = true;
             }
+
+            // Accessibility: Add roles, tabindices and keyboard listeners
+            document.querySelectorAll('td[onclick]').forEach(btn => {
+                btn.setAttribute('role', 'button');
+                btn.setAttribute('tabindex', '0');
+
+                const labelMap = {
+                    'AC': 'all clear',
+                    '=': 'equals',
+                    'x': 'multiply',
+                    '-': 'subtract',
+                    '+': 'add',
+                    '/': 'divide'
+                };
+                const text = btn.innerText;
+                btn.setAttribute('aria-label', labelMap[text] || text);
+
+                btn.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        btn.click();
+                    }
+                });
+            });
         </script>
     
     </body>
