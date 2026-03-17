@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator Display"/>
                 </td>
             </tr>
             <tr>
@@ -43,6 +43,34 @@
             var newLine = true; //Boolean variable. Determines if the next thing user types should be on a new line
             var value1;
             var currentOperator;
+
+            // Accessibility: Add roles, tabindex and labels to table cells
+            document.querySelectorAll('td').forEach(td => {
+                if (td.hasAttribute('onclick')) {
+                    td.setAttribute('role', 'button');
+                    td.setAttribute('tabindex', '0');
+
+                    // Label mapping
+                    const text = td.innerText.trim();
+                    const labels = {
+                        'x': 'multiply',
+                        '-': 'subtract',
+                        '+': 'add',
+                        '/': 'divide',
+                        'AC': 'all clear',
+                        '=': 'equals'
+                    };
+                    td.setAttribute('aria-label', labels[text] || text);
+
+                    // Keyboard support
+                    td.addEventListener('keydown', e => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            td.click();
+                        }
+                    });
+                }
+            });
             
             //Event handler for when any digit button is pressed
             function digitBtnPressed(button){
