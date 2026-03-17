@@ -1,0 +1,3 @@
+## 2025-05-14 - Accessible Table-Cell Interactions
+**Learning:** When using table cells (`<td>`) as interactive elements, they lack native keyboard support and focus visibility. To make them accessible, they require `role="button"`, `tabindex="0"`, and explicit listeners for `Enter`/`Space` keys. Additionally, applying `position: relative` and `z-index: 1` to `:focus-visible` states prevents adjacent cell borders from clipping the focus outline.
+**Action:** Always inject appropriate ARIA roles/tabindex and ensure the focus indicator is elevated in the stacking order when making non-interactive elements (like table cells or divs) functional.
