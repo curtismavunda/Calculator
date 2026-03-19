@@ -1,0 +1,3 @@
+## 2026-03-19 - Focus Outlines and Event Propagation in Table Layouts
+**Learning:** In table-based layouts, focus outlines can be clipped by adjacent cell borders. Applying `position: relative` and `z-index: 1` to focused cells ensures the outline is fully visible. Additionally, when adding keyboard listeners to elements that also have global listeners, `event.stopPropagation()` is essential to prevent double-triggering actions.
+**Action:** Always use `z-index` and `position: relative` for focus states in tables, and manage event bubbling carefully when mixing local and global keyboard handlers.
