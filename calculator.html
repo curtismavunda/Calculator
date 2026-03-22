@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-label="Calculator Display" aria-live="polite"/>
                 </td>
             </tr>
             <tr>
@@ -92,6 +92,32 @@
                 value1 = 0;
                 newLine = true;
             }
+
+            // Accessibility enhancement: Inject ARIA roles, tabindex, and keyboard listeners
+            document.querySelectorAll('td[onclick]').forEach(function(btn) {
+                btn.setAttribute('role', 'button');
+                btn.setAttribute('tabindex', '0');
+
+                // Add aria-label based on button content
+                var label = btn.innerText;
+                var labelMap = {
+                    'x': 'multiply',
+                    '-': 'subtract',
+                    '+': 'add',
+                    '/': 'divide',
+                    'AC': 'all clear',
+                    '=': 'equals'
+                };
+                btn.setAttribute('aria-label', labelMap[label] || label);
+
+                // Keyboard interaction (Enter and Space)
+                btn.addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        btn.click();
+                    }
+                });
+            });
         </script>
     
     </body>
