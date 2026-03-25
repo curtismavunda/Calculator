@@ -40,6 +40,33 @@
         </table>
         
         <script>
+            // Accessibility and Keyboard Support
+            document.addEventListener("DOMContentLoaded", function() {
+                const display = document.getElementById("InputBox");
+                display.readOnly = true;
+                display.setAttribute("aria-live", "polite");
+                display.setAttribute("aria-label", "Result display");
+
+                const labels = {
+                    "x": "multiply", "-": "subtract", "+": "add",
+                    "/": "divide", "AC": "all clear", "=": "equals"
+                };
+
+                document.querySelectorAll("td[onclick]").forEach(btn => {
+                    btn.setAttribute("role", "button");
+                    btn.setAttribute("tabindex", "0");
+                    const text = btn.innerText.trim();
+                    btn.setAttribute("aria-label", labels[text] || text);
+
+                    btn.addEventListener("keydown", e => {
+                        if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            btn.click();
+                        }
+                    });
+                });
+            });
+
             var newLine = true; //Boolean variable. Determines if the next thing user types should be on a new line
             var value1;
             var currentOperator;
