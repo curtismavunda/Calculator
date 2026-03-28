@@ -31,6 +31,17 @@ td:hover {
     background-color: #e0e0e0;
 }
 
+td:focus {
+    outline: none;
+}
+
+td:focus-visible {
+    outline: 2px solid #333;
+    outline-offset: -3px;
+    position: relative;
+    z-index: 1;
+}
+
 td[colspan="2"] {
     width: 120px; /* For the '0' button */
 }
