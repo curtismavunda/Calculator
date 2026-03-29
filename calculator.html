@@ -92,6 +92,37 @@
                 value1 = 0;
                 newLine = true;
             }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                var inputBox = document.getElementById("InputBox");
+                inputBox.readOnly = true;
+                inputBox.setAttribute("aria-live", "polite");
+                inputBox.setAttribute("aria-label", "Calculator display");
+
+                var labels = {
+                    "x": "multiply",
+                    "-": "subtract",
+                    "+": "add",
+                    "/": "divide",
+                    "AC": "all clear",
+                    "=": "equals"
+                };
+
+                var buttons = document.querySelectorAll("td[onclick]");
+                buttons.forEach(function(btn) {
+                    btn.setAttribute("role", "button");
+                    btn.setAttribute("tabindex", "0");
+                    var text = btn.innerText.trim();
+                    btn.setAttribute("aria-label", labels[text] || text);
+
+                    btn.addEventListener("keydown", function(e) {
+                        if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            this.click();
+                        }
+                    });
+                });
+            });
         </script>
     
     </body>
