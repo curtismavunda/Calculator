@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-label="Calculator display" aria-live="polite"/>
                 </td>
             </tr>
             <tr>
@@ -92,6 +92,34 @@
                 value1 = 0;
                 newLine = true;
             }
+
+            // Accessibility: Dynamically inject ARIA attributes and keyboard event listeners to calculator buttons
+            document.addEventListener('DOMContentLoaded', () => {
+                const labelMap = {
+                    'x': 'multiply',
+                    '-': 'subtract',
+                    '+': 'add',
+                    '/': 'divide',
+                    'AC': 'all clear',
+                    '=': 'equals'
+                };
+
+                const buttons = document.querySelectorAll('td[onclick]');
+                buttons.forEach(btn => {
+                    const text = btn.innerText.trim();
+                    btn.setAttribute('role', 'button');
+                    btn.setAttribute('tabindex', '0');
+                    btn.setAttribute('aria-label', labelMap[text] || text);
+
+                    // Allow 'Enter' and 'Space' to trigger button clicks
+                    btn.addEventListener('keydown', (event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            btn.click();
+                        }
+                    });
+                });
+            });
         </script>
     
     </body>
