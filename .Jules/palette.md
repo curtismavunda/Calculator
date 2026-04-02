@@ -1,0 +1,3 @@
+## 2026-04-02 - Dynamic Accessibility Injection for Legacy Table UIs
+**Learning:** In static legacy environments using table cells as buttons, dynamic injection of ARIA roles, tabindexes, and keyboard listeners via a 'DOMContentLoaded' script is superior to manual HTML edits. It ensures consistency, keeps the HTML diff clean (under the 50-line constraint), and avoids conflicts with existing legacy 'onclick' handlers by using standard '.click()' triggers.
+**Action:** Use 'DOMContentLoaded' injection for legacy UI components to maximize accessibility impact while minimizing line-count footprint.
