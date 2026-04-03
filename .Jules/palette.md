@@ -1,0 +1,3 @@
+## 2025-05-15 - Balancing Input Accessibility and Typing Support
+**Learning:** For interactive calculator displays, setting `readOnly` to prevent direct input can inadvertently block power users who rely on physical keyboards/numpads. Providing ARIA roles and keyboard focus on buttons is essential for accessibility, but should not come at the cost of existing input methods.
+**Action:** When adding accessibility features to form-like elements, ensure that standard interaction patterns (like direct typing) are preserved unless there's a strong UX reason to replace them with global key listeners.
