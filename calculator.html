@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Display"/>
                 </td>
             </tr>
             <tr>
@@ -92,7 +92,54 @@
                 value1 = 0;
                 newLine = true;
             }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const labelMap = {
+                    'x': 'multiply',
+                    '-': 'subtract',
+                    '+': 'add',
+                    '/': 'divide',
+                    'AC': 'all clear',
+                    '=': 'equals'
+                };
+
+                const buttons = document.querySelectorAll('td[onclick]');
+                buttons.forEach(btn => {
+                    btn.setAttribute('role', 'button');
+                    btn.setAttribute('tabindex', '0');
+                    const text = btn.innerText.trim();
+                    btn.setAttribute('aria-label', labelMap[text] || text);
+
+                    btn.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            this.click();
+                        }
+                    });
+                });
+
+                document.addEventListener('keydown', function(e) {
+                    if (document.activeElement.tagName === 'TD') {
+                        if (e.key === 'Enter' || e.key === ' ') return;
+                    }
+
+                    if (e.key >= '0' && e.key <= '9') {
+                        digitBtnPressed(parseInt(e.key));
+                    } else if (e.key === '+') {
+                        operatorBtnPressed('+');
+                    } else if (e.key === '-') {
+                        operatorBtnPressed('-');
+                    } else if (e.key === '*' || e.key === 'x') {
+                        operatorBtnPressed('x');
+                    } else if (e.key === '/') {
+                        operatorBtnPressed('/');
+                    } else if (e.key === 'Enter' || e.key === '=') {
+                        equalsBtnPressed();
+                    } else if (e.key === 'Escape' || e.key === 'c' || e.key === 'C') {
+                        btnACpressed();
+                    }
+                });
+            });
         </script>
-    
     </body>
 </html>
