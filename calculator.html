@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
@@ -40,6 +40,31 @@
         </table>
         
         <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const labelMap = {
+                    'x': 'multiply',
+                    '-': 'subtract',
+                    '+': 'add',
+                    '/': 'divide',
+                    'AC': 'all clear',
+                    '=': 'equals'
+                };
+
+                document.querySelectorAll('td[onclick]').forEach(btn => {
+                    btn.setAttribute('role', 'button');
+                    btn.setAttribute('tabindex', '0');
+                    const text = btn.innerText.trim();
+                    btn.setAttribute('aria-label', labelMap[text] || text);
+                });
+
+                document.addEventListener('keydown', function(event) {
+                    if ((event.key === 'Enter' || event.key === ' ') && document.activeElement.tagName === 'TD') {
+                        event.preventDefault();
+                        document.activeElement.click();
+                    }
+                });
+            });
+
             var newLine = true; //Boolean variable. Determines if the next thing user types should be on a new line
             var value1;
             var currentOperator;
