@@ -92,6 +92,27 @@
                 value1 = 0;
                 newLine = true;
             }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const input = document.getElementById('InputBox');
+                input.readOnly = true;
+                input.setAttribute('aria-label', 'Calculator display');
+                input.setAttribute('aria-live', 'polite');
+
+                const labelMap = { 'x': 'multiply', '-': 'subtract', '+': 'add', '/': 'divide', 'AC': 'all clear', '=': 'equals' };
+                document.querySelectorAll('td[onclick]').forEach(btn => {
+                    const text = btn.innerText.trim();
+                    btn.role = 'button';
+                    btn.tabIndex = 0;
+                    btn.setAttribute('aria-label', labelMap[text] || text);
+                    btn.addEventListener('keydown', e => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            btn.click();
+                        }
+                    });
+                });
+            });
         </script>
     
     </body>
