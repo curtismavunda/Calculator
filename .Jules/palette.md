@@ -1,0 +1,3 @@
+## 2025-05-14 - Accessible Table-Based Interactive Elements
+**Learning:** In a legacy table-based layout, interactive `<td>` elements require `position: relative` and `z-index: 1` on `:focus-visible` to prevent adjacent cell borders from clipping the focus outline. Additionally, dynamic injection of ARIA attributes (role, tabindex, aria-label) via a loop keeps the HTML clean while ensuring screen reader and keyboard accessibility.
+**Action:** Use `position: relative` and `z-index: 1` for focus states in table layouts, and prefer JS-driven ARIA injection for repetitive elements like calculator keys.
