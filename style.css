@@ -83,3 +83,15 @@ td[onclick*="btnACpressed"] {
 td[onclick*="btnACpressed"]:hover {
     background-color: #ef5350;
 }
+
+/* Focus indicators for accessibility */
+td:focus {
+    outline: none;
+}
+
+td:focus-visible {
+    outline: 2px solid #333;
+    outline-offset: -3px;
+    position: relative;
+    z-index: 1;
+}
