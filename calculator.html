@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
@@ -92,6 +92,22 @@
                 value1 = 0;
                 newLine = true;
             }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var labelMap = {'x': 'multiply', '-': 'subtract', '+': 'add', '/': 'divide', 'AC': 'all clear', '=': 'equals'};
+                document.querySelectorAll('td[onclick]').forEach(function(btn) {
+                    btn.setAttribute('role', 'button');
+                    btn.setAttribute('tabindex', '0');
+                    var text = btn.textContent.trim();
+                    btn.setAttribute('aria-label', labelMap[text] || text);
+                    btn.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            btn.click();
+                        }
+                    });
+                });
+            });
         </script>
     
     </body>
