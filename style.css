@@ -25,6 +25,17 @@ td {
     border: 1px solid #ddd;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    position: relative;
+}
+
+td:focus {
+    outline: none;
+}
+
+td:focus-visible {
+    outline: 3px solid #333;
+    outline-offset: -3px;
+    z-index: 1;
 }
 
 td:hover {
