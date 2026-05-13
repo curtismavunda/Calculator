@@ -1,0 +1,3 @@
+## 2025-05-14 - Accessible Table-based Buttons
+**Learning:** In legacy table-based layouts where `<td>` elements are used as interactive buttons via `onclick` attributes, accessibility is completely broken for keyboard and screen reader users. Simply adding `role="button"` and `tabindex="0"` isn't enough; you also must manually bridge the keyboard gap by adding listeners for 'Enter' and 'Space' to trigger the same click logic.
+**Action:** Use a `DOMContentLoaded` script to dynamically inject accessibility attributes (`role`, `tabindex`, `aria-label`) and keyboard listeners to all elements matching `td[onclick]` to ensure consistency and maintainability without cluttering the HTML source.
