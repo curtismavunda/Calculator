@@ -1,0 +1,3 @@
+## 2025-05-14 - [Accessible Table Buttons]
+**Learning:** Legacy table-based layouts for interactive components (like calculators) often lack keyboard accessibility. Using `role="button"`, `tabindex="0"`, and a global `DOMContentLoaded` script to inject keyboard listeners (`Enter`/`Space`) is an effective way to retrofit accessibility without a full layout rewrite. Adding `position: relative` and `z-index: 1` to `:focus-visible` states is critical for ensuring the focus ring isn't hidden by adjacent table borders.
+**Action:** Always check if custom-styled table cells used as buttons are focusable and have appropriate roles and keyboard handlers.
