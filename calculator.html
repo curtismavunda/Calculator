@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-label="Calculator display" aria-live="polite"/>
                 </td>
             </tr>
             <tr>
@@ -40,6 +40,30 @@
         </table>
         
         <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const buttons = document.querySelectorAll('td[onclick]');
+                buttons.forEach(btn => {
+                    btn.setAttribute('role', 'button');
+                    btn.setAttribute('tabindex', '0');
+
+                    let label = btn.innerText;
+                    if (label === 'x') label = 'multiply';
+                    else if (label === '/') label = 'divide';
+                    else if (label === '+') label = 'add';
+                    else if (label === '-') label = 'subtract';
+                    else if (label === 'AC') label = 'all clear';
+                    else if (label === '=') label = 'equals';
+                    btn.setAttribute('aria-label', label);
+
+                    btn.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            btn.click();
+                        }
+                    });
+                });
+            });
+
             var newLine = true; //Boolean variable. Determines if the next thing user types should be on a new line
             var value1;
             var currentOperator;
