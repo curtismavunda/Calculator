@@ -7,35 +7,35 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-label="Calculator display" aria-live="polite"/>
                 </td>
             </tr>
             <tr>
                 <td onclick="digitBtnPressed(7)">7</td>
                 <td onclick="digitBtnPressed(8)">8</td>
                 <td onclick="digitBtnPressed(9)">9</td>
-                <td onclick ="operatorBtnPressed('x')">x</td>
+                <td onclick ="operatorBtnPressed('x')" aria-label="multiply">x</td>
             </tr>
             <tr>
                 <td onclick="digitBtnPressed(4)">4</td>
                 <td onclick="digitBtnPressed(5)">5</td>
                 <td onclick="digitBtnPressed(6)">6</td>
-                <td onclick ="operatorBtnPressed('-')">-</td>
+                <td onclick ="operatorBtnPressed('-')" aria-label="subtract">-</td>
             </tr>
             <tr>
                 <td onclick="digitBtnPressed(1)">1</td>
                 <td onclick="digitBtnPressed(2)">2</td>
                 <td onclick="digitBtnPressed(3)">3</td>
-                <td onclick ="operatorBtnPressed('+')">+</td>
+                <td onclick ="operatorBtnPressed('+')" aria-label="add">+</td>
             </tr>
             <tr>
                 <td onclick ="digitBtnPressed(0)" colspan="2">0</td>
                 
-                <td onclick="btnACpressed()">AC</td>
-                <td onclick ="operatorBtnPressed('/')">/</td>
+                <td onclick="btnACpressed()" aria-label="all clear">AC</td>
+                <td onclick ="operatorBtnPressed('/')" aria-label="divide">/</td>
             </tr>
             <tr>
-                <td onclick="equalsBtnPressed()" colspan="4">=</td>
+                <td onclick="equalsBtnPressed()" colspan="4" aria-label="equals">=</td>
             </tr>
         </table>
         
@@ -44,6 +44,21 @@
             var value1;
             var currentOperator;
             
+            // Add keyboard support and accessibility roles
+            document.addEventListener("DOMContentLoaded", function() {
+                var buttons = document.querySelectorAll("td[onclick]");
+                buttons.forEach(function(btn) {
+                    btn.setAttribute("role", "button");
+                    btn.setAttribute("tabindex", "0");
+                    btn.addEventListener("keydown", function(event) {
+                        if (event.key === "Enter" || event.key === " ") {
+                            event.preventDefault();
+                            btn.click();
+                        }
+                    });
+                });
+            });
+
             //Event handler for when any digit button is pressed
             function digitBtnPressed(button){
                 
