@@ -1,0 +1,3 @@
+## 2024-05-15 - Improving table-based interactive elements
+**Learning:** Table cells (`<td>`) used as interactive elements lack inherent accessibility. They need explicit `role="button"`, `tabindex="0"`, and keyboard event listeners for Enter/Space to be usable by keyboard and screen reader users. Additionally, using `readonly` on the main display prevents keyboard users from entering invalid data while still allowing screen readers to announce updates via `aria-live`.
+**Action:** Always inject accessibility attributes into non-semantic interactive elements and provide clear `:focus-visible` styles to ensure a smooth keyboard navigation experience.
