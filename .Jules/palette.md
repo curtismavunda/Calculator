@@ -1,0 +1,3 @@
+## 2025-05-14 - [Accessibility & Robustness Enhancement]
+**Learning:** Legacy table-based layouts lack inherent semantics for interactivity. Dynamically injecting `role="button"` and `tabindex="0"` via JavaScript, along with `keydown` listeners, is a reliable way to add keyboard accessibility to such UIs without massive HTML restructuring. Additionally, guard clauses in calculation logic prevent brittle state transitions (like `undefined` results).
+**Action:** Always check for missing semantics in non-standard interactive elements (like `<td>` or `<div>` with `onclick`) and provide both keyboard listeners and visual focus indicators (`:focus-visible`).
