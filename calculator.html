@@ -70,6 +70,9 @@
             
             //Event handler for equals to button
             function equalsBtnPressed(){
+                if (currentOperator === undefined) {
+                    return;
+                }
                 var value2 = parseInt(document.getElementById("InputBox").value);
                 var finalTotal;
                 
@@ -90,8 +93,37 @@
                 }
                 document.getElementById("InputBox").value = finalTotal;
                 value1 = 0;
+                currentOperator = undefined;
                 newLine = true;
             }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const buttons = document.querySelectorAll('td[onclick]');
+                const labelMap = {
+                    'x': 'multiply',
+                    '/': 'divide',
+                    '+': 'add',
+                    '-': 'subtract',
+                    'AC': 'all clear',
+                    '=': 'equals'
+                };
+
+                buttons.forEach(button => {
+                    button.setAttribute('role', 'button');
+                    button.setAttribute('tabindex', '0');
+                    const text = button.innerText.trim();
+                    if (labelMap[text]) {
+                        button.setAttribute('aria-label', labelMap[text]);
+                    }
+
+                    button.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            button.click();
+                        }
+                    });
+                });
+            });
         </script>
     
     </body>
