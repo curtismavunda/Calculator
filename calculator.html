@@ -64,13 +64,14 @@
             
             function operatorBtnPressed(operator){
                 currentOperator = operator;
-                value1= parseInt(document.getElementById("InputBox").value);
+                value1= parseFloat(document.getElementById("InputBox").value);
                 newLine = true;
             }
             
             //Event handler for equals to button
             function equalsBtnPressed(){
-                var value2 = parseInt(document.getElementById("InputBox").value);
+                if (currentOperator === undefined) return;
+                var value2 = parseFloat(document.getElementById("InputBox").value);
                 var finalTotal;
                 
                 switch(currentOperator){
@@ -90,8 +91,23 @@
                 }
                 document.getElementById("InputBox").value = finalTotal;
                 value1 = 0;
+                currentOperator = undefined;
                 newLine = true;
             }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var buttons = document.querySelectorAll('td[onclick]');
+                buttons.forEach(function(btn) {
+                    btn.setAttribute('role', 'button');
+                    btn.setAttribute('tabindex', '0');
+                    btn.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            btn.click();
+                        }
+                    });
+                });
+            });
         </script>
     
     </body>
