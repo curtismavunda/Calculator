@@ -1,0 +1,3 @@
+## 2025-05-14 - Retrofitting Accessibility to Legacy Table UI
+**Learning:** For legacy table-based UIs where <td> elements are used as buttons, a centralized DOMContentLoaded script can efficiently inject ARIA roles, tab indices, and keyboard listeners without requiring a full HTML refactor. Using stopPropagation on focused button listeners prevents double-triggering when global keyboard shortcuts are also active.
+**Action:** Use a centralized injection script for accessibility when dealing with many similar non-semantic interactive elements, and always ensure focus listeners don't conflict with global shortcuts.

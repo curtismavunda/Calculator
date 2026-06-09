@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
@@ -64,13 +64,14 @@
             
             function operatorBtnPressed(operator){
                 currentOperator = operator;
-                value1= parseInt(document.getElementById("InputBox").value);
+                value1= parseFloat(document.getElementById("InputBox").value);
                 newLine = true;
             }
             
             //Event handler for equals to button
             function equalsBtnPressed(){
-                var value2 = parseInt(document.getElementById("InputBox").value);
+                if (!currentOperator) return;
+                var value2 = parseFloat(document.getElementById("InputBox").value);
                 var finalTotal;
                 
                 switch(currentOperator){
@@ -90,8 +91,44 @@
                 }
                 document.getElementById("InputBox").value = finalTotal;
                 value1 = 0;
+                currentOperator = undefined;
                 newLine = true;
             }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var buttons = document.querySelectorAll('td[onclick]');
+                buttons.forEach(function(btn) {
+                    btn.setAttribute('role', 'button');
+                    btn.setAttribute('tabindex', '0');
+                    var text = btn.innerText;
+                    var label = text;
+                    if (text === 'x') label = 'multiply';
+                    else if (text === '-') label = 'subtract';
+                    else if (text === '+') label = 'add';
+                    else if (text === '/') label = 'divide';
+                    else if (text === 'AC') label = 'all clear';
+                    else if (text === '=') label = 'equals';
+                    btn.setAttribute('aria-label', label);
+
+                    btn.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            btn.click();
+                        }
+                    });
+                });
+
+                window.addEventListener('keydown', function(e) {
+                    if (e.key >= '0' && e.key <= '9') digitBtnPressed(parseInt(e.key));
+                    else if (e.key === '+') operatorBtnPressed('+');
+                    else if (e.key === '-') operatorBtnPressed('-');
+                    else if (e.key === '*') operatorBtnPressed('x');
+                    else if (e.key === '/') operatorBtnPressed('/');
+                    else if (e.key === 'Enter' || e.key === '=') equalsBtnPressed();
+                    else if (e.key === 'Escape') btnACpressed();
+                });
+            });
         </script>
     
     </body>
