@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
@@ -40,9 +40,42 @@
         </table>
         
         <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const buttons = document.querySelectorAll('td[onclick]');
+                buttons.forEach(btn => {
+                    btn.setAttribute('role', 'button');
+                    btn.setAttribute('tabindex', '0');
+
+                    const text = btn.innerText.trim();
+                    if (text === 'x') btn.setAttribute('aria-label', 'multiply');
+                    else if (text === '/') btn.setAttribute('aria-label', 'divide');
+                    else if (text === '+') btn.setAttribute('aria-label', 'add');
+                    else if (text === '-') btn.setAttribute('aria-label', 'subtract');
+                    else if (text === 'AC') btn.setAttribute('aria-label', 'all clear');
+                    else if (text === '=') btn.setAttribute('aria-label', 'equals');
+
+                    btn.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            btn.click();
+                        }
+                    });
+                });
+            });
+
             var newLine = true; //Boolean variable. Determines if the next thing user types should be on a new line
             var value1;
             var currentOperator;
+
+            window.addEventListener('keydown', function(e) {
+                if (e.key >= '0' && e.key <= '9') digitBtnPressed(parseInt(e.key));
+                else if (e.key === '+') operatorBtnPressed('+');
+                else if (e.key === '-') operatorBtnPressed('-');
+                else if (e.key === '*') operatorBtnPressed('x');
+                else if (e.key === '/') { e.preventDefault(); operatorBtnPressed('/'); }
+                else if (e.key === 'Enter' || e.key === '=') equalsBtnPressed();
+                else if (e.key === 'Escape') btnACpressed();
+            });
             
             //Event handler for when any digit button is pressed
             function digitBtnPressed(button){
@@ -59,18 +92,21 @@
             //Event handler for when the AC button is pressed
             function btnACpressed(){
                 document.getElementById("InputBox").value = 0;
+                value1 = 0;
+                currentOperator = undefined;
                 newLine = true;
             }
             
             function operatorBtnPressed(operator){
                 currentOperator = operator;
-                value1= parseInt(document.getElementById("InputBox").value);
+                value1 = parseFloat(document.getElementById("InputBox").value);
                 newLine = true;
             }
             
             //Event handler for equals to button
             function equalsBtnPressed(){
-                var value2 = parseInt(document.getElementById("InputBox").value);
+                if (currentOperator === undefined) return;
+                var value2 = parseFloat(document.getElementById("InputBox").value);
                 var finalTotal;
                 
                 switch(currentOperator){
@@ -90,6 +126,7 @@
                 }
                 document.getElementById("InputBox").value = finalTotal;
                 value1 = 0;
+                currentOperator = undefined;
                 newLine = true;
             }
         </script>
