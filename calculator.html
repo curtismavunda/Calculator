@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
@@ -40,6 +40,25 @@
         </table>
         
         <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const labels = { 'x': 'multiply', '-': 'subtract', '+': 'add', '/': 'divide', 'AC': 'all clear', '=': 'equals' };
+                document.querySelectorAll('td[onclick]').forEach(btn => {
+                    btn.tabIndex = 0; btn.role = 'button';
+                    const txt = btn.innerText.trim();
+                    if (labels[txt]) btn.ariaLabel = labels[txt];
+                    btn.addEventListener('keydown', e => {
+                        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); btn.click(); }
+                    });
+                });
+            });
+            document.addEventListener('keydown', e => {
+                if (e.key >= '0' && e.key <= '9') digitBtnPressed(parseInt(e.key));
+                const ops = { '+': '+', '-': '-', '*': 'x', '/': '/' };
+                if (ops[e.key]) operatorBtnPressed(ops[e.key]);
+                if (e.key === 'Enter' || e.key === '=') equalsBtnPressed();
+                if (e.key === 'Escape') btnACpressed();
+            });
+
             var newLine = true; //Boolean variable. Determines if the next thing user types should be on a new line
             var value1;
             var currentOperator;
@@ -70,6 +89,7 @@
             
             //Event handler for equals to button
             function equalsBtnPressed(){
+                if (!currentOperator) return;
                 var value2 = parseInt(document.getElementById("InputBox").value);
                 var finalTotal;
                 
