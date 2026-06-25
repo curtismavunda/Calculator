@@ -1,0 +1,3 @@
+## 2025-05-14 - Retrofitting Accessibility to Table-Based Calculator
+**Learning:** Legacy UIs using tables for layout and interaction (like <td> with onclick) can be efficiently made accessible by retroactively adding roles and keyboard listeners via script. However, when adding both global and element-specific keyboard listeners, event propagation must be carefully managed with `stopPropagation()` to avoid double-triggering actions (e.g., Enter key triggering both the focused button and the global equals shortcut).
+**Action:** Always use `e.stopPropagation()` in element-specific keyboard listeners that might conflict with global keyboard shortcuts to ensure deterministic behavior.
