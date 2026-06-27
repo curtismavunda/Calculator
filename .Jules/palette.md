@@ -1,0 +1,3 @@
+## 2025-05-14 - Retrofitting Accessibility to Legacy Table-based UI
+**Learning:** Legacy UI built with non-semantic elements (like <td> for buttons) can be made accessible without a full HTML overhaul by using a centralized initialization script to inject ARIA roles, tabindex, and listeners. Handling both physical keyboard shortcuts and tab-navigation activation (with stopPropagation to prevent double-triggering) provides a complete, accessible experience.
+**Action:** Use script-based initialization to retroactively add role="button", tabindex="0", and aria-label to interactive elements. Ensure keyboard listeners handle Enter/Space and prevent event bubbling.

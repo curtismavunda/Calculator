@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
@@ -40,58 +40,30 @@
         </table>
         
         <script>
-            var newLine = true; //Boolean variable. Determines if the next thing user types should be on a new line
-            var value1;
-            var currentOperator;
-            
-            //Event handler for when any digit button is pressed
-            function digitBtnPressed(button){
-                
-                if(newLine){
-                    document.getElementById("InputBox").value = button;
-                    newLine = false;
-                } else {
-                    var currentValue = document.getElementById("InputBox").value;
-                    document.getElementById("InputBox").value = currentValue + button;
-                }
+            let newLine = true, value1, currentOperator;
+            const display = document.getElementById("InputBox");
+            function digitBtnPressed(n) { display.value = newLine ? n : display.value + n; newLine = false; }
+            function btnACpressed() { display.value = 0; newLine = true; value1 = undefined; currentOperator = undefined; }
+            function operatorBtnPressed(op) { currentOperator = op; value1 = parseFloat(display.value); newLine = true; }
+            function equalsBtnPressed() {
+                if (!currentOperator) return;
+                const v2 = parseFloat(display.value);
+                let res = currentOperator === '+' ? value1 + v2 : currentOperator === '-' ? value1 - v2 :
+                          currentOperator === 'x' ? value1 * v2 : value1 / v2;
+                display.value = res; value1 = res; currentOperator = undefined; newLine = true;
             }
-            
-            //Event handler for when the AC button is pressed
-            function btnACpressed(){
-                document.getElementById("InputBox").value = 0;
-                newLine = true;
-            }
-            
-            function operatorBtnPressed(operator){
-                currentOperator = operator;
-                value1= parseInt(document.getElementById("InputBox").value);
-                newLine = true;
-            }
-            
-            //Event handler for equals to button
-            function equalsBtnPressed(){
-                var value2 = parseInt(document.getElementById("InputBox").value);
-                var finalTotal;
-                
-                switch(currentOperator){
-                        case "+":
-                            finalTotal = value1 + value2;
-                            break;
-                        case "-":
-                            finalTotal = value1 - value2;
-                            break;
-                        case "/":
-                            finalTotal = value1 / value2;
-                            break;
-                        case "x":
-                            finalTotal = value1 * value2;
-                            break;
-                        
-                }
-                document.getElementById("InputBox").value = finalTotal;
-                value1 = 0;
-                newLine = true;
-            }
+            document.querySelectorAll('td[onclick]').forEach(btn => {
+                btn.setAttribute('role', 'button'); btn.setAttribute('tabindex', '0');
+                const labels = { 'x': 'multiply', '-': 'subtract', '+': 'add', '/': 'divide', 'AC': 'all clear', '=': 'equals' };
+                btn.setAttribute('aria-label', labels[btn.innerText] || btn.innerText);
+                btn.onkeydown = e => { if (['Enter', ' '].includes(e.key)) { e.preventDefault(); e.stopPropagation(); btn.click(); } };
+            });
+            document.onkeydown = e => {
+                if (e.key >= '0' && e.key <= '9') digitBtnPressed(e.key);
+                else if (['+', '-', '/', '*'].includes(e.key)) operatorBtnPressed(e.key === '*' ? 'x' : e.key);
+                else if (e.key === 'Enter' || e.key === '=') equalsBtnPressed();
+                else if (e.key === 'Escape') btnACpressed();
+            };
         </script>
     
     </body>
