@@ -7,39 +7,64 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-label="Calculator display" aria-live="polite"/>
                 </td>
             </tr>
             <tr>
                 <td onclick="digitBtnPressed(7)">7</td>
                 <td onclick="digitBtnPressed(8)">8</td>
                 <td onclick="digitBtnPressed(9)">9</td>
-                <td onclick ="operatorBtnPressed('x')">x</td>
+                <td onclick ="operatorBtnPressed('x')" aria-label="multiply">x</td>
             </tr>
             <tr>
                 <td onclick="digitBtnPressed(4)">4</td>
                 <td onclick="digitBtnPressed(5)">5</td>
                 <td onclick="digitBtnPressed(6)">6</td>
-                <td onclick ="operatorBtnPressed('-')">-</td>
+                <td onclick ="operatorBtnPressed('-')" aria-label="subtract">-</td>
             </tr>
             <tr>
                 <td onclick="digitBtnPressed(1)">1</td>
                 <td onclick="digitBtnPressed(2)">2</td>
                 <td onclick="digitBtnPressed(3)">3</td>
-                <td onclick ="operatorBtnPressed('+')">+</td>
+                <td onclick ="operatorBtnPressed('+')" aria-label="add">+</td>
             </tr>
             <tr>
                 <td onclick ="digitBtnPressed(0)" colspan="2">0</td>
                 
-                <td onclick="btnACpressed()">AC</td>
-                <td onclick ="operatorBtnPressed('/')">/</td>
+                <td onclick="btnACpressed()" aria-label="all clear">AC</td>
+                <td onclick ="operatorBtnPressed('/')" aria-label="divide">/</td>
             </tr>
             <tr>
-                <td onclick="equalsBtnPressed()" colspan="4">=</td>
+                <td onclick="equalsBtnPressed()" colspan="4" aria-label="equals">=</td>
             </tr>
         </table>
         
         <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('td[onclick]').forEach(td => {
+                    td.setAttribute('role', 'button');
+                    td.setAttribute('tabindex', '0');
+                    td.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            td.click();
+                        }
+                    });
+                });
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'TD' && (e.key === 'Enter' || e.key === ' ')) return;
+                const keyMap = {
+                    'Enter': equalsBtnPressed, '=': equalsBtnPressed, 'Escape': btnACpressed,
+                    '+': () => operatorBtnPressed('+'), '-': () => operatorBtnPressed('-'),
+                    '*': () => operatorBtnPressed('x'), 'x': () => operatorBtnPressed('x'),
+                    '/': () => operatorBtnPressed('/')
+                };
+                if (keyMap[e.key]) keyMap[e.key]();
+                else if (/[0-9]/.test(e.key)) digitBtnPressed(parseInt(e.key));
+            });
+
             var newLine = true; //Boolean variable. Determines if the next thing user types should be on a new line
             var value1;
             var currentOperator;
