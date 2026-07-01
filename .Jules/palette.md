@@ -1,0 +1,3 @@
+## 2025-05-14 - Retrofitting Accessibility to Table-Based UI
+**Learning:** Adding `role="button"` and `tabindex="0"` dynamically via JavaScript is an effective way to improve accessibility in legacy table-based layouts without requiring extensive HTML refactoring. Combined with `focus-visible` styles and global keydown listeners, it provides a modern interaction experience (keyboard navigation + physical shortcuts) while maintaining the original visual structure.
+**Action:** Use a centralized DOMContentLoaded script to inject ARIA roles and tab indices for repetitive interactive elements, and pair with a global keydown mapper for physical keyboard support.
