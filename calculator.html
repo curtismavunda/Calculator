@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-label="Calculator display" aria-live="polite"/>
                 </td>
             </tr>
             <tr>
@@ -92,6 +92,24 @@
                 value1 = 0;
                 newLine = true;
             }
+            document.addEventListener('DOMContentLoaded', () => {
+                const labels = { 'x': 'multiply', '-': 'subtract', '+': 'add', '/': 'divide', 'AC': 'all clear', '=': 'equals' };
+                document.querySelectorAll('td[onclick]').forEach(td => {
+                    td.setAttribute('role', 'button');
+                    td.setAttribute('tabindex', '0');
+                    const txt = td.innerText.trim();
+                    if (labels[txt]) td.setAttribute('aria-label', labels[txt]);
+                    td.addEventListener('keydown', e => {
+                        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); td.click(); }
+                    });
+                });
+                document.addEventListener('keydown', e => {
+                    if (e.target.tagName === 'TD' && (e.key === 'Enter' || e.key === ' ')) return;
+                    const map = { 'Enter': '=', 'Escape': 'AC', '*': 'x' };
+                    const btn = Array.from(document.querySelectorAll('td[onclick]')).find(td => td.innerText.trim() === (map[e.key] || e.key));
+                    if (btn) btn.click();
+                });
+            });
         </script>
     
     </body>
