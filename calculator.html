@@ -70,6 +70,7 @@
             
             //Event handler for equals to button
             function equalsBtnPressed(){
+                if (!currentOperator) return;
                 var value2 = parseInt(document.getElementById("InputBox").value);
                 var finalTotal;
                 
@@ -92,6 +93,23 @@
                 value1 = 0;
                 newLine = true;
             }
+            document.addEventListener('DOMContentLoaded', () => {
+                const labels = {'x':'multiply','-':'subtract','+':'add','/':'divide','AC':'all clear','=':'equals'};
+                document.querySelectorAll('td[onclick]').forEach(td => {
+                    td.tabIndex = 0; td.role = 'button';
+                    td.ariaLabel = labels[td.innerText.trim()] || td.innerText.trim();
+                    td.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); td.click(); } });
+                });
+            });
+            window.addEventListener('keydown', e => {
+                if (e.target.tagName === 'TD' && (e.key === 'Enter' || e.key === ' ')) return;
+                const map = {'*':'x','x':'x','-':'-','+':'+','/':'/','Enter':'=','=':'=','Escape':'AC'};
+                if (e.key >= '0' && e.key <= '9') digitBtnPressed(parseInt(e.key));
+                else if (map[e.key]) {
+                    const btn = map[e.key];
+                    if (btn === '=') equalsBtnPressed(); else if (btn === 'AC') btnACpressed(); else operatorBtnPressed(btn);
+                }
+            });
         </script>
     
     </body>
