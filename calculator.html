@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-label="Calculator display" aria-live="polite"/>
                 </td>
             </tr>
             <tr>
@@ -40,6 +40,25 @@
         </table>
         
         <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const labels = {'x':'multiply','-':'subtract','+':'add','/':'divide','AC':'all clear','=':'equals'};
+                document.querySelectorAll('td[onclick]').forEach(btn => {
+                    btn.setAttribute('role', 'button'); btn.setAttribute('tabindex', '0');
+                    const text = btn.innerText.trim();
+                    if (labels[text]) btn.setAttribute('aria-label', labels[text]);
+                    btn.addEventListener('keydown', e => {
+                        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
+                    });
+                });
+            });
+            document.addEventListener('keydown', e => {
+                if (e.target.tagName === 'TD' && (e.key === 'Enter' || e.key === ' ')) return;
+                const map = {'*':'x','x':'x','-':'-','+':'+','/':'/','Enter':'=','=':'=','Escape':'AC'};
+                if (map[e.key]) {
+                    const btn = Array.from(document.querySelectorAll('td[onclick]')).find(td => td.innerText.trim() === map[e.key]);
+                    if (btn) btn.click();
+                } else if (e.key >= '0' && e.key <= '9') { digitBtnPressed(parseInt(e.key)); }
+            });
             var newLine = true; //Boolean variable. Determines if the next thing user types should be on a new line
             var value1;
             var currentOperator;
