@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
@@ -70,6 +70,7 @@
             
             //Event handler for equals to button
             function equalsBtnPressed(){
+                if (currentOperator === undefined) return;
                 var value2 = parseInt(document.getElementById("InputBox").value);
                 var finalTotal;
                 
@@ -90,8 +91,29 @@
                 }
                 document.getElementById("InputBox").value = finalTotal;
                 value1 = 0;
+                currentOperator = undefined;
                 newLine = true;
             }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const labels = {'x':'multiply','-':'subtract','+':'add','/':'divide','AC':'all clear','=':'equals'};
+                document.querySelectorAll('td[onclick]').forEach(btn => {
+                    btn.tabIndex = 0; btn.role = 'button';
+                    const txt = btn.innerText.trim();
+                    btn.ariaLabel = labels[txt] || txt;
+                    btn.addEventListener('keydown', e => {
+                        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
+                    });
+                });
+                const keyMap = {'*':'x','x':'x','-':'-','+':'+','/':'/','Enter':'=','=':'=','Escape':'AC'};
+                document.addEventListener('keydown', e => {
+                    const btnText = keyMap[e.key] || (/[0-9]/.test(e.key) ? e.key : null);
+                    if (btnText) {
+                        const btn = Array.from(document.querySelectorAll('td[onclick]')).find(td => td.innerText.trim() === btnText);
+                        if (btn) btn.click();
+                    }
+                });
+            });
         </script>
     
     </body>
