@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
@@ -70,6 +70,7 @@
             
             //Event handler for equals to button
             function equalsBtnPressed(){
+                if (!currentOperator) return;
                 var value2 = parseInt(document.getElementById("InputBox").value);
                 var finalTotal;
                 
@@ -88,10 +89,48 @@
                             break;
                         
                 }
-                document.getElementById("InputBox").value = finalTotal;
+                if (finalTotal !== undefined) {
+                    document.getElementById("InputBox").value = finalTotal;
+                }
                 value1 = 0;
+                currentOperator = undefined;
                 newLine = true;
             }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                var labels = {"+": "add", "-": "subtract", "/": "divide", "x": "multiply", "AC": "all clear", "=": "equals"};
+                document.querySelectorAll("td[onclick]").forEach(function(td) {
+                    td.setAttribute("tabindex", "0");
+                    td.setAttribute("role", "button");
+                    var text = td.innerText.trim();
+                    td.setAttribute("aria-label", labels[text] || text);
+                    td.addEventListener("keydown", function(e) {
+                        if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            td.click();
+                        }
+                    });
+                });
+
+                var keyMap = {"*": "x", "x": "x", "-": "-", "+": "+", "/": "/", "Enter": "=", "=": "=", "Escape": "AC"};
+                window.addEventListener("keydown", function(e) {
+                    if (e.key >= "0" && e.key <= "9") {
+                        digitBtnPressed(parseInt(e.key));
+                    } else {
+                        var mapped = keyMap[e.key];
+                        if (mapped) {
+                            if (mapped === "AC") {
+                                btnACpressed();
+                            } else if (mapped === "=") {
+                                equalsBtnPressed();
+                            } else {
+                                operatorBtnPressed(mapped);
+                            }
+                        }
+                    }
+                });
+            });
         </script>
     
     </body>
