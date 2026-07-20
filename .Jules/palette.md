@@ -1,0 +1,3 @@
+## 2025-05-15 - Enhancing Table-Based Component Accessibility
+**Learning:** For legacy table-based UIs, accessibility can be significantly improved without structural changes by adding 'role="button"' and 'tabindex="0"' to interactive cells. A centralized 'keydown' listener that differentiates between focused element activation (Enter/Space) and global shortcuts (0-9, Operators) prevents double-triggering and provides a cohesive keyboard experience.
+**Action:** Apply ARIA roles and global keyboard listeners when retrofitting accessibility to non-semantic interactive elements, ensuring focused states are visually distinct with ':focus-visible'.
