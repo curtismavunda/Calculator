@@ -1,0 +1,3 @@
+## 2024-07-22 - Keyboard Navigation in Table-Based UIs
+**Learning:** Legacy table-based layouts using <td> elements for buttons lack native keyboard focus, role definitions, and click event triggers. Retrofitting them dynamically via a single JS script using tabindex, role="button", and a keydown listener for Enter/Space keys is far more efficient than modifying individual HTML tags, while keeping code changes under the strict 50-line limit.
+**Action:** Add dynamically-applied ARIA labels, role="button", and tabindex="0" via a DOMContentLoaded listener, and handle Enter/Space keys with event.preventDefault() and event.stopPropagation() to avoid page scrolling or duplicate global triggers.
