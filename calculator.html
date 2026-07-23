@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
@@ -40,6 +40,45 @@
         </table>
         
         <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var mapping = {'x': 'multiply', '-': 'subtract', '+': 'add', '/': 'divide', 'AC': 'all clear', '=': 'equals'};
+                document.querySelectorAll("td[onclick]").forEach(function(td) {
+                    td.setAttribute("tabindex", "0");
+                    td.setAttribute("role", "button");
+                    var t = td.innerText.trim();
+                    td.setAttribute("aria-label", mapping[t] || t);
+
+                    td.addEventListener("keydown", function(event) {
+                        if (event.key === "Enter" || event.key === " ") {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            td.click();
+                        }
+                    });
+                });
+
+                // Global keydown physical keyboard support
+                var globalKeyMap = {
+                    '*': 'x', 'x': 'x', '-': '-', '+': '+', '/': '/',
+                    'Enter': '=', '=': '=', 'Escape': 'AC'
+                };
+                window.addEventListener("keydown", function(event) {
+                    var key = event.key;
+                    if (key >= '0' && key <= '9') {
+                        digitBtnPressed(parseInt(key));
+                    } else if (globalKeyMap[key] !== undefined) {
+                        var action = globalKeyMap[key];
+                        if (action === 'x' || action === '-' || action === '+' || action === '/') {
+                            operatorBtnPressed(action);
+                        } else if (action === 'AC') {
+                            btnACpressed();
+                        } else if (action === '=') {
+                            equalsBtnPressed();
+                        }
+                    }
+                });
+            });
+
             var newLine = true; //Boolean variable. Determines if the next thing user types should be on a new line
             var value1;
             var currentOperator;
@@ -70,6 +109,9 @@
             
             //Event handler for equals to button
             function equalsBtnPressed(){
+                if (!currentOperator) {
+                    return;
+                }
                 var value2 = parseInt(document.getElementById("InputBox").value);
                 var finalTotal;
                 
@@ -88,8 +130,11 @@
                             break;
                         
                 }
-                document.getElementById("InputBox").value = finalTotal;
+                if (finalTotal !== undefined) {
+                    document.getElementById("InputBox").value = finalTotal;
+                }
                 value1 = 0;
+                currentOperator = undefined;
                 newLine = true;
             }
         </script>

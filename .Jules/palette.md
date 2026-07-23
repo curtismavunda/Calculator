@@ -1,0 +1,3 @@
+## 2024-07-23 - Accessibility Retrofitting for Table-Based UI
+**Learning:** Retrofitting accessibility (role, tabindex, listeners) to legacy table-based UI elements like <td> using a centralized DOMContentLoaded script is an efficient UX pattern that avoids heavy HTML refactoring while ensuring keyboard and screen reader support. Adding z-index and relative positioning to focused cells prevents adjacent table borders from overlapping and obscuring the custom focus rings.
+**Action:** Always combine semantic attribute retrofitting (tabindex, role, aria-label mapping) in JS with careful CSS focus ring rendering (using relative positioning + z-index) for table-based elements to guarantee screen reader and keyboard visibility compliance without design breakage.
