@@ -1,0 +1,3 @@
+## 2026-07-26 - Keyboard navigation & ARIA enhancement
+**Learning:** Retrofitting keyboard controls, screen-reader cues, and tactile focus/active responses to non-semantic tabular elements (like `<td>` as buttons) significantly enhances accessibility without altering the markup's legacy core. In sequential keydown listeners, stopping propagation (`e.stopPropagation()`) prevents double key triggers, and `:focus-visible` keeps visual indicators exclusive to keyboard users.
+**Action:** Use a dynamic DOMContentLoaded wrapper to inject accessibility states, keymaps, and proper focus rings while preventing default actions on focused elements.
