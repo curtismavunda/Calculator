@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
@@ -70,6 +70,7 @@
             
             //Event handler for equals to button
             function equalsBtnPressed(){
+                if (!currentOperator) return;
                 var value2 = parseInt(document.getElementById("InputBox").value);
                 var finalTotal;
                 
@@ -88,10 +89,61 @@
                             break;
                         
                 }
-                document.getElementById("InputBox").value = finalTotal;
+                if (finalTotal !== undefined && !isNaN(finalTotal)) {
+                    document.getElementById("InputBox").value = finalTotal;
+                }
+                currentOperator = undefined;
                 value1 = 0;
                 newLine = true;
             }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                var buttons = document.querySelectorAll("td[onclick]");
+                var labelMap = {
+                    "x": "multiply",
+                    "-": "subtract",
+                    "+": "add",
+                    "/": "divide",
+                    "AC": "all clear",
+                    "=": "equals"
+                };
+                buttons.forEach(function(btn) {
+                    btn.setAttribute("role", "button");
+                    btn.setAttribute("tabindex", "0");
+                    var text = btn.innerText.trim();
+                    btn.setAttribute("aria-label", labelMap[text] || text);
+
+                    btn.addEventListener("keydown", function(e) {
+                        if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            btn.click();
+                        }
+                    });
+                });
+
+                var keyMap = {
+                    "*": "x", "x": "x", "-": "-", "+": "+", "/": "/",
+                    "Enter": "=", "=": "=", "Escape": "AC"
+                };
+                window.addEventListener("keydown", function(e) {
+                    if (document.activeElement === document.getElementById("InputBox")) {
+                        return;
+                    }
+                    if (e.key >= "0" && e.key <= "9") {
+                        digitBtnPressed(parseInt(e.key));
+                    } else if (keyMap[e.key]) {
+                        var action = keyMap[e.key];
+                        if (action === "x" || action === "-" || action === "+" || action === "/") {
+                            operatorBtnPressed(action);
+                        } else if (action === "AC") {
+                            btnACpressed();
+                        } else if (action === "=") {
+                            equalsBtnPressed();
+                        }
+                    }
+                });
+            });
         </script>
     
     </body>
