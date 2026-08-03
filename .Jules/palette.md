@@ -1,0 +1,3 @@
+## 2026-08-03 - Custom Focus and Keyboard Navigation Retrofits
+**Learning:** Retrofitting accessibility on interactive table-based legacy cell layouts (using TD cells) requires adding `tabindex="0"`, `role="button"`, and element-level key handlers with `preventDefault()` and `stopPropagation()` to block default browser scrolling and prevent duplicate key operations from bubbling up. Custom visual outlines on CSS table cells must use `position: relative` and `z-index: 1` to ensure focus borders are not obscured by neighboring cells.
+**Action:** Always combine element-level space/enter key handlers with both event suppression mechanisms, and style table cell outlines with elevated relative stacks.

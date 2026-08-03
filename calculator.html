@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
@@ -40,6 +40,30 @@
         </table>
         
         <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const labels = {'x':'multiply','-':'subtract','+':'add','/':'divide','AC':'all clear','=':'equals'};
+                document.querySelectorAll('td[onclick]').forEach(td => {
+                    td.tabIndex = 0; td.setAttribute('role', 'button');
+                    const txt = td.textContent.trim();
+                    if (labels[txt]) td.setAttribute('aria-label', labels[txt]);
+                    td.addEventListener('keydown', e => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault(); e.stopPropagation(); td.click();
+                        }
+                    });
+                });
+            });
+            window.addEventListener('keydown', e => {
+                if (e.key >= '0' && e.key <= '9') {
+                    digitBtnPressed(parseInt(e.key));
+                } else {
+                    const op = {'*':'x','x':'x','-':'-','+':'+','/':'/','Enter':'=','=':'=','Escape':'AC'}[e.key];
+                    if (op === '=') equalsBtnPressed();
+                    else if (op === 'AC') btnACpressed();
+                    else if (op) operatorBtnPressed(op);
+                }
+            });
+
             var newLine = true; //Boolean variable. Determines if the next thing user types should be on a new line
             var value1;
             var currentOperator;
@@ -70,6 +94,7 @@
             
             //Event handler for equals to button
             function equalsBtnPressed(){
+                if (!currentOperator) return;
                 var value2 = parseInt(document.getElementById("InputBox").value);
                 var finalTotal;
                 
@@ -88,8 +113,11 @@
                             break;
                         
                 }
-                document.getElementById("InputBox").value = finalTotal;
+                if (finalTotal !== undefined) {
+                    document.getElementById("InputBox").value = finalTotal;
+                }
                 value1 = 0;
+                currentOperator = undefined;
                 newLine = true;
             }
         </script>
