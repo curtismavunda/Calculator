@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <title>Accessible Calculator</title>
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body>
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
@@ -70,6 +71,7 @@
             
             //Event handler for equals to button
             function equalsBtnPressed(){
+                if (currentOperator === undefined) return;
                 var value2 = parseInt(document.getElementById("InputBox").value);
                 var finalTotal;
                 
@@ -81,17 +83,77 @@
                             finalTotal = value1 - value2;
                             break;
                         case "/":
-                            finalTotal = value1 / value2;
+                            finalTotal = value2 !== 0 ? value1 / value2 : "Error";
                             break;
                         case "x":
                             finalTotal = value1 * value2;
                             break;
-                        
                 }
-                document.getElementById("InputBox").value = finalTotal;
+                if (finalTotal !== undefined) {
+                    document.getElementById("InputBox").value = finalTotal;
+                }
                 value1 = 0;
+                currentOperator = undefined;
                 newLine = true;
             }
+
+            // Keyboard and Accessibility helper initialization
+            document.addEventListener("DOMContentLoaded", function() {
+                var buttons = document.querySelectorAll("td[onclick]");
+                var ariaLabels = {
+                    "x": "multiply",
+                    "-": "subtract",
+                    "+": "add",
+                    "/": "divide",
+                    "AC": "all clear",
+                    "=": "equals"
+                };
+
+                buttons.forEach(function(btn) {
+                    btn.setAttribute("tabindex", "0");
+                    btn.setAttribute("role", "button");
+                    var text = btn.innerText.trim();
+                    if (ariaLabels[text]) {
+                        btn.setAttribute("aria-label", ariaLabels[text]);
+                    }
+
+                    btn.addEventListener("keydown", function(e) {
+                        if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            btn.click();
+                        }
+                    });
+                });
+
+                var keyMap = {
+                    "0": function() { digitBtnPressed(0); },
+                    "1": function() { digitBtnPressed(1); },
+                    "2": function() { digitBtnPressed(2); },
+                    "3": function() { digitBtnPressed(3); },
+                    "4": function() { digitBtnPressed(4); },
+                    "5": function() { digitBtnPressed(5); },
+                    "6": function() { digitBtnPressed(6); },
+                    "7": function() { digitBtnPressed(7); },
+                    "8": function() { digitBtnPressed(8); },
+                    "9": function() { digitBtnPressed(9); },
+                    "+": function() { operatorBtnPressed("+"); },
+                    "-": function() { operatorBtnPressed("-"); },
+                    "*": function() { operatorBtnPressed("x"); },
+                    "x": function() { operatorBtnPressed("x"); },
+                    "/": function() { operatorBtnPressed("/"); },
+                    "Enter": function() { equalsBtnPressed(); },
+                    "=": function() { equalsBtnPressed(); },
+                    "Escape": function() { btnACpressed(); }
+                };
+
+                window.addEventListener("keydown", function(e) {
+                    if (keyMap[e.key]) {
+                        e.preventDefault();
+                        keyMap[e.key]();
+                    }
+                });
+            });
         </script>
     
     </body>
