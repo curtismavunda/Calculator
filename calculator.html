@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
@@ -92,6 +92,64 @@
                 value1 = 0;
                 newLine = true;
             }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                var labels = {
+                    "+": "add",
+                    "-": "subtract",
+                    "x": "multiply",
+                    "/": "divide",
+                    "AC": "all clear",
+                    "=": "equals"
+                };
+
+                var cells = document.querySelectorAll("td[onclick]");
+                cells.forEach(function(cell) {
+                    cell.setAttribute("tabindex", "0");
+                    cell.setAttribute("role", "button");
+                    var text = cell.innerText.trim();
+                    if (labels[text]) {
+                        cell.setAttribute("aria-label", labels[text]);
+                    } else {
+                        cell.setAttribute("aria-label", text);
+                    }
+
+                    cell.addEventListener("keydown", function(e) {
+                        if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            cell.click();
+                        }
+                    });
+                });
+
+                var keyMap = {
+                    "+": "+",
+                    "-": "-",
+                    "*": "x",
+                    "x": "x",
+                    "/": "/",
+                    "Enter": "=",
+                    "=": "=",
+                    "Escape": "AC"
+                };
+
+                window.addEventListener("keydown", function(e) {
+                    if (e.target.tagName === "INPUT") return;
+                    if (e.key >= "0" && e.key <= "9") {
+                        digitBtnPressed(parseInt(e.key));
+                    } else if (keyMap[e.key] !== undefined) {
+                        var mapped = keyMap[e.key];
+                        if (mapped === "AC") {
+                            btnACpressed();
+                        } else if (mapped === "=") {
+                            equalsBtnPressed();
+                        } else {
+                            operatorBtnPressed(mapped);
+                        }
+                    }
+                });
+            });
         </script>
     
     </body>
