@@ -1,0 +1,3 @@
+## 2025-08-09 - Keyboard Navigation for Retrofitted Table Layouts
+**Learning:** Legacy tabular layouts that use `<td>` cells for keypads lack native keyboard navigation and focus structures. Appending `tabindex="0"`, `role="button"`, and localized screen reader ARIA labels dynamically during DOM initialization allows preserving existing layout systems without requiring massive HTML overhauls. Adding relative positioning and higher z-indices on focused elements ensures adjacent cell borders do not obscure custom focus rings.
+**Action:** Always inject keyboard focus, roles, aria-labels, and `:focus-visible` styles with a positive z-index and relative positioning to maintain legacy grid integrity while upgrading accessibility.
