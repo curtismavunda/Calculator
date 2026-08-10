@@ -83,3 +83,19 @@ td[onclick*="btnACpressed"] {
 td[onclick*="btnACpressed"]:hover {
     background-color: #ef5350;
 }
+
+/* Custom focus and active states */
+td:focus {
+    outline: none;
+}
+
+td:focus-visible {
+    outline: 3px solid #333;
+    outline-offset: -3px;
+    position: relative;
+    z-index: 1;
+}
+
+td:active {
+    filter: brightness(0.9);
+}

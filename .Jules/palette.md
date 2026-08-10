@@ -1,0 +1,3 @@
+## 2023-11-20 - Retrofitting Keyboard Access to Table Cells
+**Learning:** Retrofitting legacy table cells (`<td>`) that have inline `onclick` handlers with keyboard access dynamically using a centralized `DOMContentLoaded` listener is highly efficient. By attaching `tabindex="0"`, `role="button"`, custom ARIA labels, and a `keydown` handler with `event.preventDefault()` and `event.stopPropagation()`, we achieve comprehensive screen reader and keyboard accessibility without touching/restructuring legacy HTML rows/columns.
+**Action:** Always consider dynamic dynamic DOM listener injection for table cell buttons in legacy components to preserve layout structure while instantly adding full WCAG keyboard compliance.
