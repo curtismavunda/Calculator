@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
@@ -59,6 +59,7 @@
             //Event handler for when the AC button is pressed
             function btnACpressed(){
                 document.getElementById("InputBox").value = 0;
+                currentOperator = undefined;
                 newLine = true;
             }
             
@@ -70,6 +71,7 @@
             
             //Event handler for equals to button
             function equalsBtnPressed(){
+                if (currentOperator === undefined) return;
                 var value2 = parseInt(document.getElementById("InputBox").value);
                 var finalTotal;
                 
@@ -88,10 +90,46 @@
                             break;
                         
                 }
-                document.getElementById("InputBox").value = finalTotal;
-                value1 = 0;
-                newLine = true;
+                if (finalTotal !== undefined) {
+                    document.getElementById("InputBox").value = finalTotal;
+                    value1 = 0;
+                    currentOperator = undefined;
+                    newLine = true;
+                }
             }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const labels = { 'x': 'multiply', '-': 'subtract', '+': 'add', '/': 'divide', 'AC': 'all clear', '=': 'equals' };
+                document.querySelectorAll('td[onclick]').forEach(td => {
+                    td.tabIndex = 0;
+                    td.setAttribute('role', 'button');
+                    const text = td.textContent.trim();
+                    if (labels[text]) td.setAttribute('aria-label', labels[text]);
+                    td.addEventListener('keydown', e => {
+                        if (e.key === ' ' || e.key === 'Enter') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            td.click();
+                        }
+                    });
+                });
+            });
+
+            window.addEventListener('keydown', e => {
+                const keyMap = {
+                    '0':'0', '1':'1', '2':'2', '3':'3', '4':'4', '5':'5', '6':'6', '7':'7', '8':'8', '9':'9',
+                    '+':'+', '-':'-', '*': 'x', 'x': 'x', '/': '/', 'Enter': '=', '=': '=', 'Escape': 'AC'
+                };
+                const action = keyMap[e.key];
+                if (action) {
+                    const buttons = Array.from(document.querySelectorAll('td[onclick]'));
+                    const target = buttons.find(b => b.textContent.trim() === action);
+                    if (target) {
+                        e.preventDefault();
+                        target.click();
+                    }
+                }
+            });
         </script>
     
     </body>
