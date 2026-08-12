@@ -1,0 +1,3 @@
+## 2024-08-12 - Retrofitting Keyboard Accessibility to Table Cells
+**Learning:** Legacy table-based layouts can be efficiently retrofitted for keyboard navigation and screen readers by dynamically injecting `tabindex="0"`, `role="button"`, and localized `aria-label` attributes using JS, coupled with a robust outline on `:focus-visible` with `z-index` and relative positioning.
+**Action:** When working with custom interactive grid elements like `<td>`, always apply `position: relative` and `z-index: 1` alongside the focus outline to ensure adjacent cell borders do not obscure the custom focus ring.
