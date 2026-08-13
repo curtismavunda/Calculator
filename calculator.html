@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
@@ -40,6 +40,54 @@
         </table>
         
         <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var cells = document.querySelectorAll("td[onclick]");
+                var labels = {
+                    "x": "multiply",
+                    "-": "subtract",
+                    "+": "add",
+                    "/": "divide",
+                    "AC": "all clear",
+                    "=": "equals"
+                };
+                cells.forEach(function(td) {
+                    td.setAttribute("tabindex", "0");
+                    td.setAttribute("role", "button");
+                    var text = td.innerText.trim();
+                    if (labels[text]) {
+                        td.setAttribute("aria-label", labels[text]);
+                    } else {
+                        td.setAttribute("aria-label", text);
+                    }
+                    td.addEventListener("keydown", function(e) {
+                        if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            td.click();
+                        }
+                    });
+                });
+            });
+
+            window.addEventListener("keydown", function(e) {
+                var key = e.key;
+                if (!isNaN(key) && key !== " ") {
+                    digitBtnPressed(parseInt(key));
+                } else {
+                    var map = {'*':'x','x':'x','-':'-','+':'+','/':'/','Enter':'=','=':'=','Escape':'AC'};
+                    if (map[key] !== undefined) {
+                        var mapped = map[key];
+                        if (mapped === "AC") {
+                            btnACpressed();
+                        } else if (mapped === "=") {
+                            equalsBtnPressed();
+                        } else {
+                            operatorBtnPressed(mapped);
+                        }
+                    }
+                }
+            });
+
             var newLine = true; //Boolean variable. Determines if the next thing user types should be on a new line
             var value1;
             var currentOperator;
@@ -70,6 +118,9 @@
             
             //Event handler for equals to button
             function equalsBtnPressed(){
+                if (currentOperator === undefined || currentOperator === null) {
+                    return;
+                }
                 var value2 = parseInt(document.getElementById("InputBox").value);
                 var finalTotal;
                 
@@ -88,8 +139,11 @@
                             break;
                         
                 }
-                document.getElementById("InputBox").value = finalTotal;
+                if (finalTotal !== undefined && !isNaN(finalTotal)) {
+                    document.getElementById("InputBox").value = finalTotal;
+                }
                 value1 = 0;
+                currentOperator = undefined;
                 newLine = true;
             }
         </script>
