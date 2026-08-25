@@ -1,38 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <title>Calculator</title>
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body>
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-label="Calculator display" aria-live="polite"/>
                 </td>
             </tr>
             <tr>
                 <td onclick="digitBtnPressed(7)">7</td>
                 <td onclick="digitBtnPressed(8)">8</td>
                 <td onclick="digitBtnPressed(9)">9</td>
-                <td onclick ="operatorBtnPressed('x')">x</td>
+                <td onclick="operatorBtnPressed('x')">x</td>
             </tr>
             <tr>
                 <td onclick="digitBtnPressed(4)">4</td>
                 <td onclick="digitBtnPressed(5)">5</td>
                 <td onclick="digitBtnPressed(6)">6</td>
-                <td onclick ="operatorBtnPressed('-')">-</td>
+                <td onclick="operatorBtnPressed('-')">-</td>
             </tr>
             <tr>
                 <td onclick="digitBtnPressed(1)">1</td>
                 <td onclick="digitBtnPressed(2)">2</td>
                 <td onclick="digitBtnPressed(3)">3</td>
-                <td onclick ="operatorBtnPressed('+')">+</td>
+                <td onclick="operatorBtnPressed('+')">+</td>
             </tr>
             <tr>
-                <td onclick ="digitBtnPressed(0)" colspan="2">0</td>
-                
+                <td onclick="digitBtnPressed(0)" colspan="2">0</td>
                 <td onclick="btnACpressed()">AC</td>
-                <td onclick ="operatorBtnPressed('/')">/</td>
+                <td onclick="operatorBtnPressed('/')">/</td>
             </tr>
             <tr>
                 <td onclick="equalsBtnPressed()" colspan="4">=</td>
@@ -44,9 +44,40 @@
             var value1;
             var currentOperator;
             
+            var ariaLabels = {'x':'multiply','-':'subtract','+':'add','/':'divide','AC':'all clear','=':'equals'};
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var buttons = document.querySelectorAll('td[onclick]');
+                buttons.forEach(function(btn) {
+                    btn.setAttribute('role', 'button');
+                    btn.setAttribute('tabindex', '0');
+                    var txt = btn.innerText.trim();
+                    btn.setAttribute('aria-label', ariaLabels[txt] || txt);
+                    btn.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            btn.click();
+                        }
+                    });
+                });
+            });
+
+            window.addEventListener('keydown', function(e) {
+                if (e.key >= '0' && e.key <= '9') {
+                    digitBtnPressed(parseInt(e.key));
+                } else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
+                    var op = e.key === '*' ? 'x' : e.key;
+                    operatorBtnPressed(op);
+                } else if (e.key === 'Enter' || e.key === '=') {
+                    equalsBtnPressed();
+                } else if (e.key === 'Escape') {
+                    btnACpressed();
+                }
+            });
+
             //Event handler for when any digit button is pressed
             function digitBtnPressed(button){
-                
                 if(newLine){
                     document.getElementById("InputBox").value = button;
                     newLine = false;
@@ -70,6 +101,7 @@
             
             //Event handler for equals to button
             function equalsBtnPressed(){
+                if (currentOperator === undefined) return;
                 var value2 = parseInt(document.getElementById("InputBox").value);
                 var finalTotal;
                 
@@ -86,13 +118,14 @@
                         case "x":
                             finalTotal = value1 * value2;
                             break;
-                        
                 }
-                document.getElementById("InputBox").value = finalTotal;
+                if (finalTotal !== undefined) {
+                    document.getElementById("InputBox").value = finalTotal;
+                }
                 value1 = 0;
+                currentOperator = undefined;
                 newLine = true;
             }
         </script>
-    
     </body>
 </html>
