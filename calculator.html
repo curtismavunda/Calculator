@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-label="Calculator display" aria-live="polite"/>
                 </td>
             </tr>
             <tr>
@@ -70,28 +70,50 @@
             
             //Event handler for equals to button
             function equalsBtnPressed(){
+                if (!currentOperator) return;
                 var value2 = parseInt(document.getElementById("InputBox").value);
                 var finalTotal;
                 
                 switch(currentOperator){
-                        case "+":
-                            finalTotal = value1 + value2;
-                            break;
-                        case "-":
-                            finalTotal = value1 - value2;
-                            break;
-                        case "/":
-                            finalTotal = value1 / value2;
-                            break;
-                        case "x":
-                            finalTotal = value1 * value2;
-                            break;
-                        
+                        case "+": finalTotal = value1 + value2; break;
+                        case "-": finalTotal = value1 - value2; break;
+                        case "/": finalTotal = value1 / value2; break;
+                        case "x": finalTotal = value1 * value2; break;
                 }
-                document.getElementById("InputBox").value = finalTotal;
-                value1 = 0;
-                newLine = true;
+                if (finalTotal !== undefined) {
+                    document.getElementById("InputBox").value = finalTotal;
+                    value1 = 0;
+                    currentOperator = undefined;
+                    newLine = true;
+                }
             }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var buttons = document.querySelectorAll('td[onclick]');
+                var ariaMap = {'x':'multiply','-':'subtract','+':'add','/':'divide','AC':'all clear','=':'equals'};
+                var keyMap = {'*':'x','x':'x','-':'-','+':'+','/':'/','Enter':'=','=':'=','Escape':'AC'};
+                buttons.forEach(function(btn) {
+                    btn.setAttribute('tabindex', '0');
+                    btn.setAttribute('role', 'button');
+                    var txt = btn.innerText.trim();
+                    if (ariaMap[txt]) btn.setAttribute('aria-label', ariaMap[txt]);
+                    btn.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            btn.click();
+                        }
+                    });
+                });
+                window.addEventListener('keydown', function(e) {
+                    var k = e.key;
+                    var symbol = (k >= '0' && k <= '9') ? k : keyMap[k];
+                    if (symbol) {
+                        var target = Array.from(buttons).find(function(b) { return b.innerText.trim() === symbol; });
+                        if (target) target.click();
+                    }
+                });
+            });
         </script>
     
     </body>
