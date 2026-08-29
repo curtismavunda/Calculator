@@ -1,0 +1,3 @@
+## 2025-05-18 - Retrofitting Accessibility to Table-Based UI Controls
+**Learning:** Retrofitting `role="button"`, `tabindex="0"`, descriptive `aria-label`s, and `keydown` listeners to table cells (`<td>`) via JavaScript enables full keyboard and screen reader accessibility without breaking existing table layouts. Combining element-level listeners with `event.stopPropagation()` prevents global keyboard shortcut conflicts.
+**Action:** Always add `position: relative`, `z-index: 1`, and `-3px` outline offsets on `td:focus-visible` so adjacent table cell borders do not clip the keyboard focus ring.
