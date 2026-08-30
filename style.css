@@ -25,11 +25,16 @@ td {
     border: 1px solid #ddd;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    user-select: none;
 }
 
 td:hover {
     background-color: #e0e0e0;
 }
+
+td:focus { outline: none; }
+td:focus-visible { outline: 3px solid #333; outline-offset: -3px; position: relative; z-index: 1; }
+td:active { filter: brightness(0.9); transform: scale(0.96); }
 
 td[colspan="2"] {
     width: 120px; /* For the '0' button */
