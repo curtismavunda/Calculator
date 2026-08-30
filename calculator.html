@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-label="Calculator display" aria-live="polite"/>
                 </td>
             </tr>
             <tr>
@@ -70,6 +70,7 @@
             
             //Event handler for equals to button
             function equalsBtnPressed(){
+                if (!currentOperator) return;
                 var value2 = parseInt(document.getElementById("InputBox").value);
                 var finalTotal;
                 
@@ -88,10 +89,41 @@
                             break;
                         
                 }
-                document.getElementById("InputBox").value = finalTotal;
+                if (finalTotal !== undefined) {
+                    document.getElementById("InputBox").value = finalTotal;
+                }
                 value1 = 0;
+                currentOperator = undefined;
                 newLine = true;
             }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                var ariaLabels = {'x':'multiply','-':'subtract','+':'add','/':'divide','AC':'all clear','=':'equals'};
+                var keyMap = {'*':'x','x':'x','-':'-','+':'+','/':'/','Enter':'=','=':'=','Escape':'AC'};
+                document.querySelectorAll('td[onclick]').forEach(function(btn) {
+                    btn.setAttribute('tabindex', '0');
+                    btn.setAttribute('role', 'button');
+                    var txt = btn.innerText.trim();
+                    btn.setAttribute('aria-label', ariaLabels[txt] || txt);
+                    btn.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            btn.click();
+                        }
+                    });
+                });
+                window.addEventListener('keydown', function(e) {
+                    if (e.key >= '0' && e.key <= '9') {
+                        digitBtnPressed(parseInt(e.key));
+                    } else if (keyMap[e.key]) {
+                        var op = keyMap[e.key];
+                        if (op === '=') equalsBtnPressed();
+                        else if (op === 'AC') btnACpressed();
+                        else operatorBtnPressed(op);
+                    }
+                });
+            });
         </script>
     
     </body>
