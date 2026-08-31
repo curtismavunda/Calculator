@@ -25,14 +25,31 @@ td {
     border: 1px solid #ddd;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    user-select: none;
 }
 
 td:hover {
     background-color: #e0e0e0;
 }
 
+td:active {
+    filter: brightness(0.9);
+    transform: scale(0.96);
+}
+
+td:focus {
+    outline: none;
+}
+
+td:focus-visible {
+    outline: 3px solid #333;
+    outline-offset: -3px;
+    position: relative;
+    z-index: 1;
+}
+
 td[colspan="2"] {
-    width: 120px; /* For the '0' button */
+    width: 120px;
 }
 
 td[colspan="4"] {
@@ -54,9 +71,12 @@ td[colspan="4"] {
     border-radius: 5px;
 }
 
-/* Style for operator buttons */
+#InputBox:focus-visible {
+    outline: 2px solid #fff;
+}
+
 td[onclick*="operatorBtnPressed"] {
-    background-color: #f9a825; /* Orange color */
+    background-color: #f9a825;
     color: #fff;
 }
 
@@ -64,9 +84,8 @@ td[onclick*="operatorBtnPressed"]:hover {
     background-color: #fbc02d;
 }
 
-/* Style for equals button */
 td[onclick*="equalsBtnPressed"] {
-    background-color: #4CAF50; /* Green color */
+    background-color: #4CAF50;
     color: #fff;
 }
 
@@ -74,9 +93,8 @@ td[onclick*="equalsBtnPressed"]:hover {
     background-color: #66BB6A;
 }
 
-/* Style for AC button */
 td[onclick*="btnACpressed"] {
-    background-color: #f44336; /* Red color */
+    background-color: #f44336;
     color: #fff;
 }
 
