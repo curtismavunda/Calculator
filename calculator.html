@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite"/>
                 </td>
             </tr>
             <tr>
@@ -56,13 +56,23 @@
                 }
             }
             
+            function clearActiveOperator(){
+                var activeBtns = document.querySelectorAll('.active-operator');
+                activeBtns.forEach(function(btn){ btn.classList.remove('active-operator'); });
+            }
+
             //Event handler for when the AC button is pressed
             function btnACpressed(){
                 document.getElementById("InputBox").value = 0;
                 newLine = true;
+                clearActiveOperator();
             }
             
             function operatorBtnPressed(operator){
+                clearActiveOperator();
+                if (window.event && window.event.currentTarget) {
+                    window.event.currentTarget.classList.add('active-operator');
+                }
                 currentOperator = operator;
                 value1= parseInt(document.getElementById("InputBox").value);
                 newLine = true;
@@ -91,6 +101,7 @@
                 document.getElementById("InputBox").value = finalTotal;
                 value1 = 0;
                 newLine = true;
+                clearActiveOperator();
             }
         </script>
     
