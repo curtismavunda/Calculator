@@ -1,0 +1,3 @@
+## 2025-05-18 - Retrofitting Accessibility to Table-Based Calculator UI
+**Learning:** Legacy table-based calculator buttons (`td[onclick]`) lack keyboard focus and screen reader semantics by default. Adding `tabindex="0"`, `role="button"`, and descriptive `aria-label` attributes via DOM script along with `td:focus-visible` CSS rules provides full keyboard and screen reader accessibility without requiring extensive markup restructuring.
+**Action:** Use programmatic ARIA attribute mapping and `:focus-visible` outline styles for table or non-semantic custom interactive elements to ensure accessibility while keeping code changes minimal.
