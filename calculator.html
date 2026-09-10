@@ -56,16 +56,29 @@
                 }
             }
             
+            function clearActiveOperator(){
+                var activeBtns = document.querySelectorAll("td.active-operator");
+                for(var i = 0; i < activeBtns.length; i++){
+                    activeBtns[i].classList.remove("active-operator");
+                }
+            }
+
             //Event handler for when the AC button is pressed
             function btnACpressed(){
                 document.getElementById("InputBox").value = 0;
                 newLine = true;
+                clearActiveOperator();
             }
             
             function operatorBtnPressed(operator){
                 currentOperator = operator;
                 value1= parseInt(document.getElementById("InputBox").value);
                 newLine = true;
+                clearActiveOperator();
+                var target = (window.event && window.event.target) || (event && event.target);
+                if(target){
+                    target.classList.add("active-operator");
+                }
             }
             
             //Event handler for equals to button
@@ -91,6 +104,7 @@
                 document.getElementById("InputBox").value = finalTotal;
                 value1 = 0;
                 newLine = true;
+                clearActiveOperator();
             }
         </script>
     
