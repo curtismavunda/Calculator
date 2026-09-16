@@ -14,25 +14,25 @@
                 <td onclick="digitBtnPressed(7)">7</td>
                 <td onclick="digitBtnPressed(8)">8</td>
                 <td onclick="digitBtnPressed(9)">9</td>
-                <td onclick ="operatorBtnPressed('x')">x</td>
+                <td onclick="operatorBtnPressed(this, 'x')">x</td>
             </tr>
             <tr>
                 <td onclick="digitBtnPressed(4)">4</td>
                 <td onclick="digitBtnPressed(5)">5</td>
                 <td onclick="digitBtnPressed(6)">6</td>
-                <td onclick ="operatorBtnPressed('-')">-</td>
+                <td onclick="operatorBtnPressed(this, '-')">-</td>
             </tr>
             <tr>
                 <td onclick="digitBtnPressed(1)">1</td>
                 <td onclick="digitBtnPressed(2)">2</td>
                 <td onclick="digitBtnPressed(3)">3</td>
-                <td onclick ="operatorBtnPressed('+')">+</td>
+                <td onclick="operatorBtnPressed(this, '+')">+</td>
             </tr>
             <tr>
-                <td onclick ="digitBtnPressed(0)" colspan="2">0</td>
+                <td onclick="digitBtnPressed(0)" colspan="2">0</td>
                 
                 <td onclick="btnACpressed()">AC</td>
-                <td onclick ="operatorBtnPressed('/')">/</td>
+                <td onclick="operatorBtnPressed(this, '/')">/</td>
             </tr>
             <tr>
                 <td onclick="equalsBtnPressed()" colspan="4">=</td>
@@ -56,13 +56,25 @@
                 }
             }
             
+            function clearActiveOperator(){
+                var activeOps = document.querySelectorAll(".active-operator");
+                for (var i = 0; i < activeOps.length; i++) {
+                    activeOps[i].classList.remove("active-operator");
+                }
+            }
+
             //Event handler for when the AC button is pressed
             function btnACpressed(){
+                clearActiveOperator();
                 document.getElementById("InputBox").value = 0;
                 newLine = true;
             }
             
-            function operatorBtnPressed(operator){
+            function operatorBtnPressed(btnElement, operator){
+                clearActiveOperator();
+                if (btnElement && btnElement.classList) {
+                    btnElement.classList.add("active-operator");
+                }
                 currentOperator = operator;
                 value1= parseInt(document.getElementById("InputBox").value);
                 newLine = true;
@@ -70,6 +82,7 @@
             
             //Event handler for equals to button
             function equalsBtnPressed(){
+                clearActiveOperator();
                 var value2 = parseInt(document.getElementById("InputBox").value);
                 var finalTotal;
                 
