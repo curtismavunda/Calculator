@@ -1,0 +1,3 @@
+## 2025-07-01 - Table-based Button Keyboard Accessibility & Active Operator Feedback
+**Learning:** Retrofitting accessibility (role, tabindex, listeners) to legacy table-based UI elements like `<td>` via a centralized `DOMContentLoaded` script is an efficient UX pattern that avoids heavy HTML refactoring while ensuring full screen reader and keyboard navigation support. Adding distinct visual feedback (`.active-operator`) for operator state reduces cognitive load for keyboard and mouse users alike.
+**Action:** Always ensure `event.stopPropagation()` is called on button-level key handlers when pairing global physical keyboard listeners with focused element keydown handlers to prevent double execution.
