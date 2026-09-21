@@ -7,32 +7,32 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
                 <td onclick="digitBtnPressed(7)">7</td>
                 <td onclick="digitBtnPressed(8)">8</td>
                 <td onclick="digitBtnPressed(9)">9</td>
-                <td onclick ="operatorBtnPressed('x')">x</td>
+                <td onclick="operatorBtnPressed(this, 'x')">x</td>
             </tr>
             <tr>
                 <td onclick="digitBtnPressed(4)">4</td>
                 <td onclick="digitBtnPressed(5)">5</td>
                 <td onclick="digitBtnPressed(6)">6</td>
-                <td onclick ="operatorBtnPressed('-')">-</td>
+                <td onclick="operatorBtnPressed(this, '-')">-</td>
             </tr>
             <tr>
                 <td onclick="digitBtnPressed(1)">1</td>
                 <td onclick="digitBtnPressed(2)">2</td>
                 <td onclick="digitBtnPressed(3)">3</td>
-                <td onclick ="operatorBtnPressed('+')">+</td>
+                <td onclick="operatorBtnPressed(this, '+')">+</td>
             </tr>
             <tr>
-                <td onclick ="digitBtnPressed(0)" colspan="2">0</td>
+                <td onclick="digitBtnPressed(0)" colspan="2">0</td>
                 
                 <td onclick="btnACpressed()">AC</td>
-                <td onclick ="operatorBtnPressed('/')">/</td>
+                <td onclick="operatorBtnPressed(this, '/')">/</td>
             </tr>
             <tr>
                 <td onclick="equalsBtnPressed()" colspan="4">=</td>
@@ -44,9 +44,15 @@
             var value1;
             var currentOperator;
             
+            function clearActiveOperator() {
+                var buttons = document.querySelectorAll("td.active-operator");
+                buttons.forEach(function(btn) {
+                    btn.classList.remove("active-operator");
+                });
+            }
+
             //Event handler for when any digit button is pressed
             function digitBtnPressed(button){
-                
                 if(newLine){
                     document.getElementById("InputBox").value = button;
                     newLine = false;
@@ -60,16 +66,23 @@
             function btnACpressed(){
                 document.getElementById("InputBox").value = 0;
                 newLine = true;
+                clearActiveOperator();
+                currentOperator = undefined;
             }
             
-            function operatorBtnPressed(operator){
+            function operatorBtnPressed(element, operator){
+                clearActiveOperator();
                 currentOperator = operator;
-                value1= parseInt(document.getElementById("InputBox").value);
+                value1 = parseInt(document.getElementById("InputBox").value);
                 newLine = true;
+                if (element && element.classList) {
+                    element.classList.add("active-operator");
+                }
             }
             
             //Event handler for equals to button
             function equalsBtnPressed(){
+                if (!currentOperator) return;
                 var value2 = parseInt(document.getElementById("InputBox").value);
                 var finalTotal;
                 
@@ -88,10 +101,53 @@
                             break;
                         
                 }
-                document.getElementById("InputBox").value = finalTotal;
+                if (finalTotal !== undefined) {
+                    document.getElementById("InputBox").value = finalTotal;
+                }
                 value1 = 0;
                 newLine = true;
+                clearActiveOperator();
+                currentOperator = undefined;
             }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                var labels = {'x': 'multiply', '-': 'subtract', '+': 'add', '/': 'divide', 'AC': 'all clear', '=': 'equals'};
+                var buttons = document.querySelectorAll("td[onclick]");
+                buttons.forEach(function(btn) {
+                    btn.setAttribute("tabindex", "0");
+                    btn.setAttribute("role", "button");
+                    var txt = btn.innerText.trim();
+                    btn.setAttribute("aria-label", labels[txt] || txt);
+                    btn.addEventListener("keydown", function(e) {
+                        if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            btn.click();
+                        }
+                    });
+                });
+
+                var keyMap = {'*':'x','x':'x','-':'-','+':'+','/':'/','Enter':'=','=':'=','Escape':'AC'};
+                window.addEventListener("keydown", function(e) {
+                    if (e.key >= "0" && e.key <= "9") {
+                        digitBtnPressed(parseInt(e.key));
+                    } else if (keyMap[e.key]) {
+                        var targetOp = keyMap[e.key];
+                        if (targetOp === "AC") {
+                            btnACpressed();
+                        } else if (targetOp === "=") {
+                            equalsBtnPressed();
+                        } else {
+                            var opBtns = document.querySelectorAll("td[onclick*='operatorBtnPressed']");
+                            opBtns.forEach(function(b) {
+                                if (b.innerText.trim() === targetOp) {
+                                    operatorBtnPressed(b, targetOp);
+                                }
+                            });
+                        }
+                    }
+                });
+            });
         </script>
     
     </body>
