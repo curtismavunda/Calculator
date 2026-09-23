@@ -1,0 +1,3 @@
+## 2025-07-01 - Keyboard Accessibility for Table-Based UI Elements
+**Learning:** Legacy table-based layouts using `<td>` elements with inline `onclick` handlers lack default tab focus and keyboard activation (Enter/Space), rendering them inaccessible to screen readers and keyboard-only users. Setting `tabindex="0"`, `role="button"`, and stopping event propagation on keydown ensures smooth accessibility without breaking existing click handlers.
+**Action:** When retrofitting accessibility to non-interactive HTML elements acting as buttons, combine `role="button"`, `tabindex="0"`, explicit `aria-label` mappings, and custom `focus-visible` outline styles with `z-index: 1`.
