@@ -1,0 +1,3 @@
+## 2025-05-18 - Retrofitting Accessibility & Active State Visual Feedback on Non-Semantic Elements
+**Learning:** Legacy table-based calculator buttons (`<td>` elements with `onclick`) lack natural keyboard focus, screen reader semantics, and active operator state indicators. Dynamically decorating them via script (`tabindex="0"`, `role="button"`, ARIA labels) combined with `.active-operator` CSS highlight drastically improves usability without requiring HTML structural refactoring.
+**Action:** When retrofitting accessibility to non-standard interactive UI components, combine a DOM-decorating script for ARIA/keyboard handlers with explicit visual state classes (`.active-operator`) and `:focus-visible` styles.
