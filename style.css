@@ -64,6 +64,15 @@ td[onclick*="operatorBtnPressed"]:hover {
     background-color: #fbc02d;
 }
 
+td.active-operator {
+    outline: 3px solid #333;
+    outline-offset: -3px;
+    filter: brightness(1.2);
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+}
+
 /* Style for equals button */
 td[onclick*="equalsBtnPressed"] {
     background-color: #4CAF50; /* Green color */
