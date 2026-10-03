@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-label="Calculator display" aria-live="polite"/>
                 </td>
             </tr>
             <tr>
@@ -92,6 +92,37 @@
                 value1 = 0;
                 newLine = true;
             }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                var labelMap = {'x': 'multiply', '-': 'subtract', '+': 'add', '/': 'divide', 'AC': 'all clear', '=': 'equals'};
+                document.querySelectorAll('td[onclick]').forEach(function(td) {
+                    td.setAttribute('tabindex', '0');
+                    td.setAttribute('role', 'button');
+                    var txt = td.textContent.trim();
+                    td.setAttribute('aria-label', labelMap[txt] || txt);
+                    td.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            td.click();
+                        }
+                    });
+                });
+            });
+
+            window.addEventListener('keydown', function(e) {
+                var keyMap = {'*':'x','x':'x','-':'-','+':'+','/':'/','Enter':'=','=':'=','Escape':'AC'};
+                var action = keyMap[e.key] || e.key;
+                if (!isNaN(action) && action !== ' ' && action !== '') {
+                    digitBtnPressed(parseInt(action));
+                } else if (['+','-','/','x'].indexOf(action) !== -1) {
+                    operatorBtnPressed(action);
+                } else if (action === '=') {
+                    equalsBtnPressed();
+                } else if (action === 'AC') {
+                    btnACpressed();
+                }
+            });
         </script>
     
     </body>
