@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-label="Calculator display" aria-live="polite"/>
                 </td>
             </tr>
             <tr>
@@ -92,6 +92,35 @@
                 value1 = 0;
                 newLine = true;
             }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                var labels = {'x':'multiply', '-':'subtract', '+':'add', '/':'divide', 'AC':'all clear', '=':'equals'};
+                document.querySelectorAll("td[onclick]").forEach(function(cell) {
+                    cell.setAttribute("tabindex", "0");
+                    cell.setAttribute("role", "button");
+                    var text = cell.innerText.trim();
+                    cell.setAttribute("aria-label", labels[text] || text);
+                    cell.addEventListener("keydown", function(e) {
+                        if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            cell.click();
+                        }
+                    });
+                });
+            });
+
+            window.addEventListener("keydown", function(e) {
+                var keyMap = {'*':'x','x':'x','-':'-','+':'+','/':'/','Enter':'=','=':'=','Escape':'AC'};
+                if (e.key >= '0' && e.key <= '9') {
+                    digitBtnPressed(e.key);
+                } else if (keyMap[e.key]) {
+                    var action = keyMap[e.key];
+                    if (action === 'AC') btnACpressed();
+                    else if (action === '=') equalsBtnPressed();
+                    else operatorBtnPressed(action);
+                }
+            });
         </script>
     
     </body>
