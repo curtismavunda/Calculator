@@ -1,0 +1,3 @@
+## 2025-02-14 - Keyboard accessibility and ARIA semantics for table-based buttons
+**Learning:** Retrofitting accessibility (`role="button"`, `tabindex="0"`, descriptive `aria-label`s, and `Enter`/`Space` keyboard listeners) onto legacy `<td>` table elements enables full screen reader and keyboard navigation without requiring structural HTML refactoring. Custom focus indicators require `position: relative` and `z-index: 1` to prevent adjacent table cell borders from obscuring the outline.
+**Action:** Always map interactive table cells or non-semantic elements with `role="button"`, `tabindex="0"`, explicit keydown handlers (`Enter`/`Space` with `preventDefault()` and `stopPropagation()`), and high-contrast `:focus-visible` outlines.
