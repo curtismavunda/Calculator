@@ -7,46 +7,49 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-live="polite" aria-label="Calculator display"/>
                 </td>
             </tr>
             <tr>
-                <td onclick="digitBtnPressed(7)">7</td>
-                <td onclick="digitBtnPressed(8)">8</td>
-                <td onclick="digitBtnPressed(9)">9</td>
-                <td onclick ="operatorBtnPressed('x')">x</td>
+                <td role="button" tabindex="0" aria-label="7" onclick="digitBtnPressed(7)">7</td>
+                <td role="button" tabindex="0" aria-label="8" onclick="digitBtnPressed(8)">8</td>
+                <td role="button" tabindex="0" aria-label="9" onclick="digitBtnPressed(9)">9</td>
+                <td role="button" tabindex="0" aria-label="multiply" onclick="operatorBtnPressed(this, 'x')">x</td>
             </tr>
             <tr>
-                <td onclick="digitBtnPressed(4)">4</td>
-                <td onclick="digitBtnPressed(5)">5</td>
-                <td onclick="digitBtnPressed(6)">6</td>
-                <td onclick ="operatorBtnPressed('-')">-</td>
+                <td role="button" tabindex="0" aria-label="4" onclick="digitBtnPressed(4)">4</td>
+                <td role="button" tabindex="0" aria-label="5" onclick="digitBtnPressed(5)">5</td>
+                <td role="button" tabindex="0" aria-label="6" onclick="digitBtnPressed(6)">6</td>
+                <td role="button" tabindex="0" aria-label="subtract" onclick="operatorBtnPressed(this, '-')">-</td>
             </tr>
             <tr>
-                <td onclick="digitBtnPressed(1)">1</td>
-                <td onclick="digitBtnPressed(2)">2</td>
-                <td onclick="digitBtnPressed(3)">3</td>
-                <td onclick ="operatorBtnPressed('+')">+</td>
+                <td role="button" tabindex="0" aria-label="1" onclick="digitBtnPressed(1)">1</td>
+                <td role="button" tabindex="0" aria-label="2" onclick="digitBtnPressed(2)">2</td>
+                <td role="button" tabindex="0" aria-label="3" onclick="digitBtnPressed(3)">3</td>
+                <td role="button" tabindex="0" aria-label="add" onclick="operatorBtnPressed(this, '+')">+</td>
             </tr>
             <tr>
-                <td onclick ="digitBtnPressed(0)" colspan="2">0</td>
-                
-                <td onclick="btnACpressed()">AC</td>
-                <td onclick ="operatorBtnPressed('/')">/</td>
+                <td role="button" tabindex="0" aria-label="0" onclick="digitBtnPressed(0)" colspan="2">0</td>
+                <td role="button" tabindex="0" aria-label="all clear" onclick="btnACpressed()">AC</td>
+                <td role="button" tabindex="0" aria-label="divide" onclick="operatorBtnPressed(this, '/')">/</td>
             </tr>
             <tr>
-                <td onclick="equalsBtnPressed()" colspan="4">=</td>
+                <td role="button" tabindex="0" aria-label="equals" onclick="equalsBtnPressed()" colspan="4">=</td>
             </tr>
         </table>
         
         <script>
-            var newLine = true; //Boolean variable. Determines if the next thing user types should be on a new line
+            var newLine = true;
             var value1;
             var currentOperator;
             
-            //Event handler for when any digit button is pressed
+            function clearActiveOperator() {
+                document.querySelectorAll('.active-operator').forEach(function(el) {
+                    el.classList.remove('active-operator');
+                });
+            }
+
             function digitBtnPressed(button){
-                
                 if(newLine){
                     document.getElementById("InputBox").value = button;
                     newLine = false;
@@ -56,43 +59,59 @@
                 }
             }
             
-            //Event handler for when the AC button is pressed
             function btnACpressed(){
                 document.getElementById("InputBox").value = 0;
+                clearActiveOperator();
+                currentOperator = undefined;
                 newLine = true;
             }
             
-            function operatorBtnPressed(operator){
+            function operatorBtnPressed(element, operator){
+                clearActiveOperator();
+                if (element && element.classList) {
+                    element.classList.add('active-operator');
+                }
                 currentOperator = operator;
-                value1= parseInt(document.getElementById("InputBox").value);
+                value1 = parseInt(document.getElementById("InputBox").value);
                 newLine = true;
             }
             
-            //Event handler for equals to button
             function equalsBtnPressed(){
+                if (!currentOperator) return;
                 var value2 = parseInt(document.getElementById("InputBox").value);
                 var finalTotal;
                 
                 switch(currentOperator){
-                        case "+":
-                            finalTotal = value1 + value2;
-                            break;
-                        case "-":
-                            finalTotal = value1 - value2;
-                            break;
-                        case "/":
-                            finalTotal = value1 / value2;
-                            break;
-                        case "x":
-                            finalTotal = value1 * value2;
-                            break;
-                        
+                    case "+":
+                        finalTotal = value1 + value2;
+                        break;
+                    case "-":
+                        finalTotal = value1 - value2;
+                        break;
+                    case "/":
+                        finalTotal = value1 / value2;
+                        break;
+                    case "x":
+                        finalTotal = value1 * value2;
+                        break;
                 }
                 document.getElementById("InputBox").value = finalTotal;
+                clearActiveOperator();
+                currentOperator = undefined;
                 value1 = 0;
                 newLine = true;
             }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('td[role="button"]').forEach(function(btn) {
+                    btn.addEventListener('keydown', function(event) {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            btn.click();
+                        }
+                    });
+                });
+            });
         </script>
-    
     </body>
 </html>
