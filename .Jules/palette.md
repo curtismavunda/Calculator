@@ -1,0 +1,3 @@
+## 2025-10-12 - Active Operator Visual State & Display Live Region
+**Learning:** In simple single-display calculators without equation history, users benefit significantly from persistent visual feedback indicating which operator (`+`, `-`, `x`, `/`) is currently active. Furthermore, setting `readonly`, `aria-label`, and `aria-live="polite"` on the display input ensures screen reader users receive dynamic updates without direct editing conflicts.
+**Action:** Always pair arithmetic operator selection with active styling and ensure calculated output resets active operator highlights immediately.
