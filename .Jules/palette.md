@@ -1,0 +1,3 @@
+## 2025-02-14 - Table Cell Accessibility Retrofitting
+**Learning:** Legacy table-based calculator UIs using `<td>` elements with `onclick` attributes are completely inaccessible to keyboard and screen reader users by default. Retrofitting them dynamically via a `DOMContentLoaded` script with `tabindex="0"`, `role="button"`, `aria-label`, and `keydown` event handling allows complete keyboard navigation and screen reader support without breaking table layout.
+**Action:** When working with non-semantic interactive elements (like `<td>`), always ensure `tabindex="0"`, `role="button"`, descriptive ARIA labels, and keydown handlers for `Enter` and `Space` are attached, alongside CSS `:focus-visible` ring styles.
