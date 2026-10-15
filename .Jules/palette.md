@@ -1,0 +1,3 @@
+## 2025-10-15 - Table-Based Calculator Keyboard Accessibility & ARIA Support
+**Learning:** Legacy HTML table cells (`<td>`) used as interactive buttons are invisible to keyboard navigation and screen readers without explicit `role="button"`, `tabindex="0"`, descriptive `aria-label` attributes, and `Enter`/`Space` keydown handlers.
+**Action:** Always complement `tabindex="0"` and `role="button"` on non-native interactive elements with explicit `:focus-visible` CSS rules (`outline-offset: -3px; position: relative; z-index: 1;`) so table cell borders do not obscure focus indicators during keyboard navigation.
