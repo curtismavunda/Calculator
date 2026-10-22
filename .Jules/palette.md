@@ -1,0 +1,3 @@
+## 2025-05-18 - Visual & ARIA State Feedback for Operator Selection
+**Learning:** In simple calculator UIs without active state feedback, users can easily forget or misinterpret which binary operation (+, -, x, /) was clicked prior to entering the second operand. Exposing `aria-pressed` along with a high-contrast active background state improves both screen reader context and visual clarity.
+**Action:** Always maintain explicit state tracking and `aria-pressed` toggle logic for mode or operator selection controls, ensuring the state automatically clears on operation completion (=) or reset (AC).
