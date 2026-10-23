@@ -83,3 +83,18 @@ td[onclick*="btnACpressed"] {
 td[onclick*="btnACpressed"]:hover {
     background-color: #ef5350;
 }
+
+td:focus {
+    outline: none;
+}
+
+td:focus-visible {
+    outline: 3px solid #1e88e5;
+    outline-offset: -3px;
+    position: relative;
+    z-index: 1;
+}
+
+td:active {
+    transform: scale(0.96);
+}

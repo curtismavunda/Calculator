@@ -1,0 +1,3 @@
+## 2025-07-01 - Retrofitting Table-Based Calculator Accessibility
+**Learning:** Adding `tabindex="0"`, `role="button"`, descriptive `aria-label`s, and `Enter`/`Space` `keydown` handlers to `<td>` elements via a DOMContentLoaded script converts plain HTML table cells into fully keyboard-navigable and screen-reader accessible buttons.
+**Action:** When working with legacy HTML table-based UI controls, use a centralized JS initialization script to set ARIA roles, labels, and keyboard listeners while using `td:focus-visible` with `position: relative` and `z-index: 1` to ensure focus outlines stay visible over cell borders.
