@@ -7,7 +7,7 @@
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-label="Calculator display" aria-live="polite"/>
                 </td>
             </tr>
             <tr>
@@ -56,20 +56,33 @@
                 }
             }
             
+            function clearActiveOperator(){
+                document.querySelectorAll("td[onclick*='operatorBtnPressed']").forEach(function(td){
+                    td.classList.remove("active-operator");
+                    td.removeAttribute("aria-pressed");
+                });
+            }
+
             //Event handler for when the AC button is pressed
             function btnACpressed(){
                 document.getElementById("InputBox").value = 0;
                 newLine = true;
+                currentOperator = undefined;
+                clearActiveOperator();
             }
             
             function operatorBtnPressed(operator){
+                clearActiveOperator();
                 currentOperator = operator;
                 value1= parseInt(document.getElementById("InputBox").value);
                 newLine = true;
+                var opEl = Array.from(document.querySelectorAll("td[onclick*='operatorBtnPressed']")).find(function(td){ return td.innerText.trim() === operator; });
+                if(opEl){ opEl.classList.add("active-operator"); opEl.setAttribute("aria-pressed", "true"); }
             }
             
             //Event handler for equals to button
             function equalsBtnPressed(){
+                if(!currentOperator) return;
                 var value2 = parseInt(document.getElementById("InputBox").value);
                 var finalTotal;
                 
@@ -88,10 +101,39 @@
                             break;
                         
                 }
-                document.getElementById("InputBox").value = finalTotal;
+                if(finalTotal !== undefined) document.getElementById("InputBox").value = finalTotal;
                 value1 = 0;
+                currentOperator = undefined;
+                clearActiveOperator();
                 newLine = true;
             }
+
+            document.addEventListener("DOMContentLoaded", function(){
+                var labels = {'+':'plus','-':'minus','x':'multiply','/':'divide','=':'equals','AC':'all clear'};
+                document.querySelectorAll("td[onclick]").forEach(function(td){
+                    td.setAttribute("role", "button");
+                    td.setAttribute("tabindex", "0");
+                    var txt = td.innerText.trim();
+                    if(labels[txt]) td.setAttribute("aria-label", labels[txt]);
+                    td.addEventListener("keydown", function(e){
+                        if(e.key === "Enter" || e.key === " "){ e.preventDefault(); e.stopPropagation(); td.click(); }
+                    });
+                });
+                window.addEventListener("keydown", function(e){
+                    if(e.key >= "0" && e.key <= "9"){
+                        var digitEl = Array.from(document.querySelectorAll("td[onclick*='digitBtnPressed']")).find(function(td){ return td.innerText.trim() === e.key; });
+                        if(digitEl) digitEl.click();
+                    } else {
+                        var keyMap = {'*':'x','x':'x','-':'-','+':'+','/':'/','Enter':'=','=':'=','Escape':'AC'};
+                        var mapped = keyMap[e.key];
+                        if(mapped){
+                            e.preventDefault();
+                            var target = Array.from(document.querySelectorAll("td[onclick]")).find(function(td){ return td.innerText.trim() === mapped; });
+                            if(target) target.click();
+                        }
+                    }
+                });
+            });
         </script>
     
     </body>
