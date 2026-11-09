@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <title>Calculator</title>
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body>
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-label="Calculator display" aria-live="polite"/>
                 </td>
             </tr>
             <tr>
@@ -70,6 +71,7 @@
             
             //Event handler for equals to button
             function equalsBtnPressed(){
+                if(currentOperator === undefined) return;
                 var value2 = parseInt(document.getElementById("InputBox").value);
                 var finalTotal;
                 
@@ -89,9 +91,33 @@
                         
                 }
                 document.getElementById("InputBox").value = finalTotal;
+                currentOperator = undefined;
                 value1 = 0;
                 newLine = true;
             }
+
+            document.addEventListener("DOMContentLoaded", () => {
+                const labels = {'+':'Add','-':'Subtract','x':'Multiply','/':'Divide','=':'Equals','AC':'Clear all'};
+                document.querySelectorAll("td[onclick]").forEach(td => {
+                    const txt = td.textContent.trim();
+                    td.setAttribute("role", "button");
+                    td.setAttribute("tabindex", "0");
+                    td.setAttribute("aria-label", labels[txt] || txt);
+                    td.addEventListener("keydown", (e) => {
+                        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); td.click(); }
+                    });
+                });
+            });
+            window.addEventListener("keydown", (e) => {
+                const map = {'*':'x','x':'x','-':'-','+':'+','/':'/','Enter':'=','=':'=','Escape':'AC'};
+                if (e.key >= '0' && e.key <= '9') { digitBtnPressed(parseInt(e.key)); }
+                else if (map[e.key]) {
+                    const action = map[e.key];
+                    if (action === 'AC') btnACpressed();
+                    else if (action === '=') equalsBtnPressed();
+                    else operatorBtnPressed(action);
+                }
+            });
         </script>
     
     </body>
