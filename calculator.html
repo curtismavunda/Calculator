@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <title>Calculator</title>
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body>
         <table border="1">
             <tr>
                 <td colspan="4">
-                    <input type="text" id="InputBox" value="0"/>
+                    <input type="text" id="InputBox" value="0" readonly aria-label="Calculator display" aria-live="polite"/>
                 </td>
             </tr>
             <tr>
@@ -70,6 +71,7 @@
             
             //Event handler for equals to button
             function equalsBtnPressed(){
+                if (!currentOperator) return;
                 var value2 = parseInt(document.getElementById("InputBox").value);
                 var finalTotal;
                 
@@ -86,12 +88,40 @@
                         case "x":
                             finalTotal = value1 * value2;
                             break;
-                        
                 }
                 document.getElementById("InputBox").value = finalTotal;
                 value1 = 0;
+                currentOperator = undefined;
                 newLine = true;
             }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                var labels = {'+':'add','-':'subtract','x':'multiply','/':'divide','=':'equals','AC':'all clear'};
+                document.querySelectorAll("td[onclick]").forEach(function(td) {
+                    var txt = td.textContent.trim();
+                    td.setAttribute("role", "button");
+                    td.setAttribute("tabindex", "0");
+                    td.setAttribute("aria-label", labels[txt] || txt);
+                    td.addEventListener("keydown", function(e) {
+                        if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            td.click();
+                        }
+                    });
+                });
+            });
+
+            window.addEventListener("keydown", function(e) {
+                if (e.target && e.target.tagName === "INPUT") return;
+                var key = e.key;
+                if (key >= "0" && key <= "9") { digitBtnPressed(parseInt(key)); }
+                else if (key === "+" || key === "-") { operatorBtnPressed(key); }
+                else if (key === "*" || key.toLowerCase() === "x") { operatorBtnPressed("x"); }
+                else if (key === "/") { operatorBtnPressed("/"); }
+                else if (key === "Enter" || key === "=") { equalsBtnPressed(); }
+                else if (key === "Escape" || key.toLowerCase() === "c") { btnACpressed(); }
+            });
         </script>
     
     </body>
