@@ -1,0 +1,3 @@
+## 2025-05-18 - Retrofitting Accessibility on Legacy Table-based Interfaces
+**Learning:** Retrofitting accessibility (`role="button"`, `tabindex="0"`, descriptive `aria-label`, and keyboard activation) via DOMContentLoaded to non-semantic elements (`<td>`) provides seamless screen reader and keyboard UX without risky HTML structure refactoring. Custom focus indicators on table cells require `position: relative` and `z-index: 1` to prevent adjacent cell borders from cutting off outlines.
+**Action:** When working with table-based UI layouts, inject accessibility attributes dynamically, use `:focus-visible` with relative positioning, and handle both focused-element activation and global key shortcuts with careful event propagation stops.
